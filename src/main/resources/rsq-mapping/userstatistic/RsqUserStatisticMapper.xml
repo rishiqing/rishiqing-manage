@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rishiqing.modules.userstatistic.mapper.RsqUserStatisticMapper" >
+
+  <resultMap id="BaseResultMap" type="com.rishiqing.modules.userstatistic.entity.RsqUserStatistic" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+      <!-- 用户名 -->
+    <result column="name" property="name" jdbcType="VARCHAR" />
+      <!-- 邮箱 -->
+    <result column="email" property="email" jdbcType="VARCHAR" />
+      <!-- 手机号 -->
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+      <!-- 注册时间 -->
+    <result column="regist_date" property="registDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+      <!-- 最后登录时间 -->
+    <result column="last_login_date" property="lastLoginDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+      <!-- 公司名 -->
+    <result column="team_name" property="teamName" jdbcType="VARCHAR" />
+      <!-- 公司人数 -->
+    <result column="team_number" property="teamNumber" jdbcType="VARCHAR" />
+      <!-- 数量来源 -->
+    <result column="date_from" property="dateFrom" jdbcType="VARCHAR" />
+      <!-- 渠道 -->
+    <result column="date_channel" property="dateChannel" jdbcType="VARCHAR" />
+  </resultMap>
+
+    <!-- 系统统计数据存储map -->
+    <resultMap id="systemStatistic" type="com.rishiqing.modules.userstatistic.entity.RsqSystemStatistic" >
+        <!-- /** 共有用户 */ -->
+        <result column="totalUser" property="totalUser" javaType="INTEGER" />
+        <!-- /** 个人用户 */ -->
+        <result column="singleUser" property="singleUser" javaType="INTEGER" />
+        <!-- /** 公司用户 */ -->
+        <result column="teamUser" property="teamUser" javaType="INTEGER" />
+        <!-- /** 邀请未登录人数 */ -->
+        <result column="waitLoginUser" property="waitLoginUser" javaType="INTEGER" />
+        <!-- /** 共有公司 */ -->
+        <result column="totalTeam" property="totalTeam" javaType="INTEGER" />
+        <!-- /** 正式公司 */ -->
+        <result column="effectiveTeam" property="effectiveTeam" javaType="INTEGER" />
+        <!-- /** 失效公司 */ -->
+        <result column="invaildTeam" property="invaildTeam" javaType="INTEGER" />
+        <!-- /** 总邀请人数 */ -->
+        <result column="allInviteUser" property="allInviteUser" javaType="INTEGER" />
+        <!-- /** 当前在线人数 */ -->
+        <result column="currentLoginUser" property="currentLoginUser" javaType="INTEGER" />
+    </resultMap>
+
+    <!-- 某人统计数据存储map -->
+    <resultMap id="dayStatistic" type="com.rishiqing.modules.userstatistic.entity.RsqDayStatistic">
+        <!-- /** 今日注册用户 */ -->
+        <result column="registUser" property="registUser" javaType="INTEGER" />
+        <!-- /** 今日新建公司 */ -->
+        <result column="registTeam" property="registTeam" javaType="INTEGER" />
+        <!-- /** 今日登录团队 */ -->
+        <result column="loginTeam" property="loginTeam" javaType="INTEGER" />
+        <!-- /** 今日登录用户 */ -->
+        <result column="loginUser" property="loginUser" javaType="INTEGER" />
+        <!-- /** 今日邀请未登陆人数 */ -->
+        <result column="waitLoginUser" property="waitLoginUser" javaType="INTEGER" />
+        <!-- /** 今日总邀请人数 */ -->
+        <result column="allInviteUser" property="allInviteUser" javaType="INTEGER" />
+    </resultMap>
+
+    <!-- 用户信息统计 -->
+  <select id="ajaxList" resultMap="BaseResultMap">
+    SELECT
+        a.`name` AS NAME,
+        a.email AS email,
+        a.phone_number AS phone,
+        ur.reg_date AS regist_date,
+        t.`name` AS teamName,
+        ts.user_limit AS teamNumber,
+        ur.client AS date_from,
+        ur.client AS date_channel
+    FROM
+        USER u,
+        account a,
+        team t,
+        user_register ur,
+        team_status ts
+    WHERE
+        u.account_id = a.id
+    AND u.team_id = t.id
+    AND ur.account_id = a.id
+    AND ts.team_id = t.id
+      <if test="name != null and name != '' ">
+          AND a.name LIKE  "%"#{name}"%"
+      </if>
+      <if test="email != null and email != '' ">
+          AND a.email LIKE  "%"#{email}"%"
+      </if>
+      <if test="phone != null and phone != '' ">
+          AND a.phone_number LIKE  "%"#{phone}"%"
+      </if>
+      <if test="registBeginDate != null">
+          AND ur.reg_date >=  #{registBeginDate}
+      </if>
+      <if test="registEndDate != null">
+          AND #{registEndDate} >= ur.reg_date
+      </if>
+    ORDER BY
+        ur.reg_date DESC
+  </select>
+  
+
+    <!-- 获取日事清系统后台数据统计信息 -->
+    <select id="getRsqSystemStatistic" resultMap="systemStatistic">
+SELECT sum(p1) totalUser, sum(p2) singleUser, sum(p3) teamUser, sum(p4) waitLoginUser, sum(p5) totalTeam, sum(p6) effectiveTeam, sum(p7) invaildTeam, sum(p8) allInviteUser, sum(p9) currentLoginUser
+FROM
+(
+	SELECT count(*) p1, 0 p2, 0 p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` GROUP BY id
+	UNION ALL
+	SELECT 0 p1, COUNT(*) p2, 0 p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` WHERE team_id IS NULL GROUP BY id
+	UNION ALL
+	SELECT 0 p1, 0 p2, count(*) p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` WHERE team_id IS NOT NULL GROUP BY id
+	UNION ALL
+	SELECT 0 p1, 0 p2, 0 p3, 0 p4, count(*) p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM team  GROUP BY id
+) t
+    </select>
+
+    <!-- 获取日事清系统指定日期相关数据统计信息 -->
+    <select id="getRsqDayStatistic" resultMap="dayStatistic">
+        SELECT sum(p1) registUser, sum(p2) registTeam, sum(p3) loginTeam, sum(p4) loginUser, sum(p5) waitLoginUser, sum(p6) allInviteUser
+        FROM
+        (
+        SELECT count(*) p1, 0 p2, 0 p3, 0 p4, 0 p5, 0 p6 FROM user_ui_setting WHERE #{queryDate} >= last_updated
+        )t
+    </select>
+
+</mapper>

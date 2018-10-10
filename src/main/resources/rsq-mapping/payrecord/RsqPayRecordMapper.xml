@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rishiqing.modules.payrecord.mapper.RsqPayRecordMapper" >
+
+  <resultMap id="BaseResultMap" type="com.rishiqing.modules.payrecord.entity.RsqPayRecord" >
+    <!-- id -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <!-- 充值时间 -->
+    <result column="pay_date" property="payDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    <!-- 用户类型 -->
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <!-- 充值类型 -->
+    <result column="plateform" property="plateform" jdbcType="VARCHAR" />
+    <!-- 价格（自付费） -->
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <!-- 团队/个人名称 -->
+    <result column="team_name" property="teamName" jdbcType="VARCHAR" />
+    <!-- 联系人/用户名称 -->
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <!-- 电话 -->
+    <result column="linked_phone" property="linkedPhone" jdbcType="VARCHAR" />
+    <!-- 充值天数 -->
+    <result column="days" property="days" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t.id,
+    t.create_by AS "createBy.id",
+    t.create_date,
+    t.update_by AS "updateBy.id",
+    t.update_date,
+    t.del_flag,
+    t.remarks,
+    t.pay_date,
+    t.pay_type,
+    t.plateform,
+    t.price,
+    t.team_name,
+    t.contacts,
+    t.linked_phone,
+    t.deadline,
+    t.days
+  </sql>
+
+  <select id="ajaxList" resultMap="BaseResultMap">
+    SELECT
+      po.id as id,
+      po.date_created as pay_date,
+      pp.description as pay_type,
+      po.platform as plateform,
+      po.total_fee as price,
+      t.`name` as team_name,
+      td.contacts as contacts,
+      td.phone_number as linked_phone,
+      po.days as days
+    FROM
+        pay_order po,
+        pay_product pp,
+        team t,
+        team_data td
+    WHERE
+        po.pay_product_id = pp.id
+    AND po.team_id = t.id
+    AND td.team_id = t.id
+    <if test="teamName != null">
+      AND t.name LIKE  "%"#{teamName}"%"
+    </if>
+    <if test="contacts != null">
+      AND td.contacts LIKE  "%"#{contacts}"%"
+    </if>
+    <if test="payBeginDate != null">
+      AND po.date_created >= #{payBeginDate}
+    </if>
+    <if test="payEndDate != null">
+      AND #{payEndDate} >= po.date_created
+    </if>
+    ORDER BY po.date_created DESC
+  </select>
+</mapper>

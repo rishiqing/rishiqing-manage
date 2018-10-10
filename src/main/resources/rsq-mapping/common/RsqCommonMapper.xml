@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rishiqing.modules.userstatistic.mapper.RsqUserStatisticMapper" >
+
+    <!-- 用户map -->
+    <resultMap id="rsqUserMap" type="com.rishiqing.modules.common.entity.RsqUser" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <!-- 帐号是否被锁住 -->
+        <id column="account_locked" property="accountLocked" jdbcType="BIT" javaType="java.lang.Boolean"/>
+        <!-- 公司id -->
+        <id column="team_id" property="teamId" jdbcType="VARCHAR" />
+        <!-- 公司名字 -->
+        <id column="team_name" property="teamName" jdbcType="VARCHAR" />
+
+        <!-- 邮箱 -->
+        <id column="email" property="email" jdbcType="VARCHAR" />
+        <!-- 是否验证过邮箱 -->
+        <id column="is_check_email" property="isCheckEmail" jdbcType="BIT" javaType="java.lang.Boolean"/>
+        <!-- 密码 -->
+        <id column="password" property="password" jdbcType="VARCHAR" />
+        <!-- 手机号 -->
+        <id column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+        <!-- 头像地址后缀 -->
+        <id column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <!-- 个人设置名称 -->
+        <id column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- team版本信息map -->
+    <resultMap id="rsqTeamVersionMap" type="com.rishiqing.modules.common.entity.RsqTeamVersion" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <!-- 创建时间 -->
+        <id column="date_created" property="dateCreated" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        <!-- 更新时间 -->
+        <id column="last_updated" property="lastUpdated" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+        <!-- 类型 -->
+        <id column="type" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- 产品信息map -->
+    <resultMap id="rsqPayProductMap" type="com.rishiqing.modules.common.entity.RsqPayProduct" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <!-- 价格 -->
+        <id column="price" property="price" jdbcType="DOUBLE" javaType="java.lang.Double" />
+        <!-- 描述（版本） -->
+        <id column="description" property="description" jdbcType="VARCHAR" />
+        <!-- 此产品是否可以被购买 -->
+        <id column="can_buy" property="canBuy" jdbcType="BIT" javaType="java.lang.Boolean" />
+        <!-- 公司会员类型 -->
+        <id column="team_version_id" property="teamVersionId" jdbcType="INTEGER" />
+    </resultMap>
+
+    <!-- 获取日事清用户信息 -->
+    <select id="getUserInfoInRishiqingDB" resultMap="rsqUserMap">
+        SELECT
+            u.id,
+            t.id AS team_id,
+            t.`name` AS team_name,
+            a.account_locked,
+            a.email,
+            a.is_check_email,
+            a.`password`,
+            a.phone_number,
+            a.avatar,
+            a.`name`
+        FROM
+        USER u,
+        account a,
+        team t
+        WHERE
+        u.account_id = a.id
+        AND t.id = u.team_id
+        AND t.`name` = '北京创仕科锐信息技术有限公司'
+        AND t.is_display = TRUE
+        <if test="email != null">
+            AND a.email =  "#{email}"
+        </if>
+        <if test="phone != null">
+            AND a.phone_number = "#{phone}"
+        </if>
+    </select>
+</mapper>

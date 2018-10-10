@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rishiqing.modules.teammanage.mapper.RsqTeamManageMapper" >
+
+  <resultMap id="BaseResultMap" type="com.rishiqing.modules.teammanage.entity.RsqTeamManage" >
+      <!-- 公司id -->
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <!-- 公司名称 -->
+      <result column="team_name" property="teamName" jdbcType="VARCHAR" />
+      <!-- 公司创建人 -->
+      <result column="create_man_name" property="createManName" jdbcType="VARCHAR" />
+      <!-- 联系人邮箱（公司创建人邮箱） -->
+      <result column="create_man_email" property="linkedEmail" jdbcType="VARCHAR" />
+      <!-- 联系人手机号（公司创建人手机号） -->
+      <result column="create_man_phone" property="linkedPhone" jdbcType="VARCHAR" />
+      <!-- 创建日期 -->
+      <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <!-- 公司成员人数 -->
+      <result column="team_member" property="teamMember" jdbcType="INTEGER" javaType="java.lang.Integer" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    t.id,
+    t.create_by AS "createBy.id",
+    t.create_date,
+    t.update_by AS "updateBy.id",
+    t.update_date,
+    t.del_flag,
+    t.remarks,
+    t.team_name,
+    t.create_man_name,
+    t.linked_email,
+    t.linked_phone,
+    t.team_member
+  </sql>
+  
+  <select id="ajaxList" resultMap="BaseResultMap">
+      SELECT
+          t.id AS id,
+          t. NAME AS team_name,
+          td.contacts AS create_man_name,
+          a.email AS create_man_email,
+          td.phone_number AS create_man_phone,
+          t.date_created AS create_date,
+          (
+          SELECT
+          COUNT(*)
+          FROM
+          `user`
+          WHERE
+          `user`.team_id = t.id
+          ) AS team_member
+      FROM
+          team t
+          LEFT JOIN team_data td ON t.id = td.team_id
+          LEFT JOIN team_user_role tur ON tur.team_id = t.id
+          LEFT JOIN USER u ON u.id = tur.user_id
+          LEFT JOIN account a ON a.id = u.account_id
+      WHERE
+          tur.role = 'creator'
+          <if test="teamName != null">
+              AND t.name LIKE  "%"#{teamName}"%"
+          </if>
+          <if test="createBeginDate != null">
+              AND t.date_created >= #{createBeginDate}
+          </if>
+          <if test="createEndDate != null">
+              AND #{createEndDate} >= t.date_created
+          </if>
+        ORDER BY
+            t.date_created DESC
+  </select>
+
+
+    <!-- 通过id获取团队信息 -->
+    <select id="getRsqTeamManageById" resultType="com.rishiqing.modules.teammanage.entity.RsqTeamManage">
+        SELECT
+            t.id AS id,
+            t. NAME AS team_name,
+            td.contacts AS create_man_name,
+            a.email AS create_man_email,
+            td.phone_number AS create_man_phone,
+            t.date_created AS create_date,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    `user`
+                WHERE
+                    `user`.team_id = t.id
+            ) AS team_member
+        FROM
+            team t
+        LEFT JOIN team_data td ON t.id = td.team_id
+        LEFT JOIN team_status ts ON t.id = ts.team_id
+        LEFT JOIN team_user_role tur ON tur.team_id = t.id
+        AND tur.role = 'creator'
+        LEFT JOIN USER u ON u.id = tur.user_id
+        LEFT JOIN account a ON a.id = u.account_id
+        WHERE
+            1 = 1
+        AND t.id = #{id}
+    </select>
+
+    <!-- 通过teamId获取到公司状态 -->
+    <select id="getRsqTeamStatusByTeamId" resultType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
+        SELECT
+            id AS id,
+            version AS version,
+            team_version_id AS teamVersionId,
+            team_id AS teamId,
+            date_created AS dateCreated,
+            user_limit AS userLimit,
+            last_updated lastUpdated,
+            dead_line AS deadLine,
+            is_expired AS isExpired
+        FROM
+            team_status
+        WHERE
+            team_id = #{teamId}
+    </select>
+
+    <!-- 更新teamStatus信息 -->
+    <update id="updateTeamStatus" parameterType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
+        UPDATE team_status
+            SET team_version_id = #{teamVersionId},
+            user_limit = #{userLimit},
+            last_updated = #{lastUpdated},
+            dead_line = #{deadLine},
+            is_expired = #{isExpired}
+        WHERE
+            id = #{id}
+    </update>
+
+    <insert id="addTeamStatus" parameterType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
+        INSERT INTO team_status (
+            version,
+            team_version_id,
+            team_id,
+            date_created,
+            user_limit,
+            last_updated,
+            dead_line,
+            is_expired
+        )
+        VALUES(
+            #{version},
+            #{teamVersionId},
+            #{teamId},
+            #{dateCreated},
+            #{userLimit},
+            #{lastUpdated},
+            #{deadLine},
+            #{isExpired}
+        )
+    </insert>
+
+
+    <!-- 添加充值记录 -->
+    <insert id="addPayOrder" parameterType="com.rishiqing.modules.teammanage.entity.RsqPayOrder">
+        INSERT INTO pay_order (
+            version,
+            date_created,
+            last_updated,
+            body,
+            platform,
+            days,
+            team_id,
+            pay_product_id,
+            total_fee,
+            user_limit,
+            user_id,
+            client,
+            STATUS,
+            pay_type,
+            transact_no,
+            out_trade_no
+        )
+        VALUES(
+            0,
+            #{dateCreated},
+            #{lastUpdated},
+            #{body},
+            "系统",
+            #{days},
+            #{teamId},
+            #{payProductId},
+            #{totalFee},
+            #{userLimit},
+            #{userId},
+            "sys",
+            true,
+            #{payType},
+            #{transactNo},
+            #{outTradeNo}
+        )
+    </insert>
+
+</mapper>
