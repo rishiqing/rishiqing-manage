@@ -69,7 +69,28 @@ public class RsqPayRecord extends AbstractEntity<String> {
     /**充值天数*/
     @TableField(value = "days")
 	private String days;
-	
+
+    //用户id
+    private Integer userId;
+    //公司id
+    private Integer teamId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
+	}
+
 	/**
 	 * 获取  id
 	 *@return: String  字段主键

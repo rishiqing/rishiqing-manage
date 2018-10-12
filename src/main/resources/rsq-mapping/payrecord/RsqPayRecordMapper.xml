@@ -21,6 +21,10 @@
     <result column="linked_phone" property="linkedPhone" jdbcType="VARCHAR" />
     <!-- 充值天数 -->
     <result column="days" property="days" jdbcType="VARCHAR" />
+    <!-- 用户id -->
+    <result column="userId" property="userId" jdbcType="INTEGER"/>
+    <!-- 用户id -->
+    <result column="teamId" property="teamId" jdbcType="INTEGER"/>
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -52,7 +56,8 @@
       t.`name` as team_name,
       td.contacts as contacts,
       td.phone_number as linked_phone,
-      po.days as days
+      po.days as days,
+      t.id as teamId
     FROM
         pay_order po,
         pay_product pp,

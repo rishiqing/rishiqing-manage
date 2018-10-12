@@ -1,5 +1,9 @@
 package com.rishiqing.core.util;
 
+import com.rishiqing.core.constant.RsqSystemConstants;
+import org.slf4j.LoggerFactory;
+
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,4 +60,155 @@ public class CommonUtil {
         return calendar.getTime();
     }
 
+
+    /**
+     * 获取一个随机订单号
+     * @return
+     * @author codingR
+     * @date 2018/8/4 15:43
+     */
+    public static String getOutTradeNo () {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        StringBuffer buffer = new StringBuffer(sdf.format(date));
+        Integer bit = RsqSystemConstants.OUT_TRADE_NO_MAX_BIT - buffer.length();
+        buffer.append(randomNum(bit));
+        return buffer.toString();
+    }
+
+    /**
+     * 获得一个指定位数的随机数
+     * @param num   位数
+     * @return
+     */
+    public static String randomNum(int num){
+        SecureRandom ranGen = new SecureRandom();
+        StringBuffer sb = new StringBuffer("");
+        for (int i = 0 ; i < num ; i ++) {
+            sb.append(ranGen.nextInt(10));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 基本版订单 body
+     */
+    public static String getBodyForBase(Integer userLimit,Integer days){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, days);
+            Date overDate = cal.getTime();
+
+            StringBuffer sbf = new StringBuffer();
+            sbf.append("购买后可容纳");
+            if(userLimit == -1){
+                sbf.append("无限");
+            }else{
+                sbf.append(userLimit);
+            }
+            sbf.append("个成员，");
+            sbf.append(days);
+            sbf.append("天，");
+            sbf.append(sdf.format(overDate));
+            sbf.append("到期");
+            return sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 试用版订单 body
+     */
+    public static String getBodyForTrial(Integer userLimit,Integer days){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, days);
+            Date overDate = cal.getTime();
+
+            StringBuffer sbf = new StringBuffer();
+            sbf.append("试用版可容纳");
+            if(userLimit == -1){
+                sbf.append("无限");
+            }else{
+                sbf.append(userLimit);
+            }
+            sbf.append("个成员，");
+            sbf.append(days);
+            sbf.append("天，");
+            sbf.append(sdf.format(overDate));
+            sbf.append("到期");
+            return sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 基本版订单 body
+     */
+    public static String getBodyForBase(Integer userLimit,Date overDate){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+
+            StringBuffer sbf = new StringBuffer();
+            sbf.append("购买后可容纳");
+            if(userLimit == -1){
+                sbf.append("无限");
+            }else{
+                sbf.append(userLimit);
+            }
+            sbf.append("个成员，");
+            sbf.append(getSubDay(new Date(), overDate));
+            sbf.append("天，");
+            sbf.append(sdf.format(overDate));
+            sbf.append("到期");
+            return sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 试用版订单 body
+     */
+    public static String getBodyForTrial(Integer userLimit,Date overDate){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+                        StringBuffer sbf = new StringBuffer();
+            sbf.append("试用版可容纳");
+            if(userLimit == -1){
+                sbf.append("无限");
+            }else{
+                sbf.append(userLimit);
+            }
+            sbf.append("个成员，");
+            sbf.append(getSubDay(new Date(), overDate));
+            sbf.append("天，");
+            sbf.append(sdf.format(overDate));
+            sbf.append("到期");
+            return sbf.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * 获得日期相减 返回天数
+     */
+    public static int getSubDay(Date begin, Date end){
+        long timeMil = end.getTime() -  begin.getTime();
+        long day = timeMil / (1000*60*60*24);
+        return (int)day;
+    }
 }

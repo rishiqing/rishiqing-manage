@@ -1,5 +1,6 @@
 package com.rishiqing.modules.common.service;
 
+import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 
@@ -21,11 +22,17 @@ public interface IRsqCommonService {
      */
     boolean judgeUserPermission();
 
-//    /**
-//     * 获取当前用户对应的日事清用户信息
-//     * @return
-//     */
-//    RsqUser getUserInfoInRishiqingDB();
+    /**
+     * 获取当前用户对应的日事清用户信息
+     * @return
+     */
+    RsqUser getUserInfoInRishiqingDB();
+
+    /**
+     * 获取当前用户对应的日事清用户信息
+     * @return
+     */
+    RsqUser getUserInfoInRishiqingDBById(Integer userId);
 
     /**
      * 获取专业版id
@@ -48,5 +55,6 @@ public interface IRsqCommonService {
     /**
      * 获取专业版产品信息
      */
+    RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId);
 }
 

@@ -22,6 +22,12 @@
     <result column="date_from" property="dateFrom" jdbcType="VARCHAR" />
       <!-- 渠道 -->
     <result column="date_channel" property="dateChannel" jdbcType="VARCHAR" />
+      <!-- 用户id -->
+      <result column="userId" property="userId" jdbcType="INTEGER"/>
+      <!-- 用户id -->
+      <result column="teamId" property="teamId" jdbcType="INTEGER"/>
+      <!-- 登录次数 -->
+      <result column="login_cnt" property="loginCnt" jdbcType="INTEGER" />
   </resultMap>
 
     <!-- 系统统计数据存储map -->
@@ -65,25 +71,40 @@
     <!-- 用户信息统计 -->
   <select id="ajaxList" resultMap="BaseResultMap">
     SELECT
+        a.id,
         a.`name` AS NAME,
         a.email AS email,
         a.phone_number AS phone,
         ur.reg_date AS regist_date,
+        ld.login_date as last_login_date,
+        ld.login_cnt as login_cnt,
         t.`name` AS teamName,
         ts.user_limit AS teamNumber,
         ur.client AS date_from,
-        ur.client AS date_channel
+        ur.client AS date_channel,
+        t.id AS teamId,
+        u.id AS userId
     FROM
-        USER u,
         account a,
-        team t,
         user_register ur,
-        team_status ts
+        USER u
+        LEFT JOIN team t ON t.id = u.team_id
+        LEFT JOIN team_status ts ON ts.team_id = t.id
+        LEFT JOIN (
+      SELECT
+      count(*) as login_cnt,
+      user_id,
+      login_date
+      FROM
+      user_login
+      GROUP BY
+      user_id
+      ORDER BY
+      login_date DESC
+      ) as ld ON ld.user_id = u.id
     WHERE
         u.account_id = a.id
-    AND u.team_id = t.id
     AND ur.account_id = a.id
-    AND ts.team_id = t.id
       <if test="name != null and name != '' ">
           AND a.name LIKE  "%"#{name}"%"
       </if>
@@ -98,6 +119,9 @@
       </if>
       <if test="registEndDate != null">
           AND #{registEndDate} >= ur.reg_date
+      </if>
+      <if test="teamId != null and teamId != '' ">
+          AND u.team_id = #{teamId}
       </if>
     ORDER BY
         ur.reg_date DESC

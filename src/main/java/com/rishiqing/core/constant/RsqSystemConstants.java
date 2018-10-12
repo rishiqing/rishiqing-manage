@@ -26,4 +26,6 @@ public class RsqSystemConstants {
 
     public static final String ULTIMATE = "ULTIMATE";
 
+    public static final  Integer OUT_TRADE_NO_MAX_BIT = 28;
+
 }

@@ -17,6 +17,10 @@
       <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <!-- 公司成员人数 -->
       <result column="team_member" property="teamMember" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <!-- 用户id -->
+      <result column="userId" property="userId" jdbcType="INTEGER"/>
+      <!-- 用户id -->
+      <result column="teamId" property="teamId" jdbcType="INTEGER"/>
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -49,7 +53,9 @@
           `user`
           WHERE
           `user`.team_id = t.id
-          ) AS team_member
+          ) AS team_member,
+          t.id as teamId,
+          u.id as userId
       FROM
           team t
           LEFT JOIN team_data td ON t.id = td.team_id
@@ -88,7 +94,9 @@
                     `user`
                 WHERE
                     `user`.team_id = t.id
-            ) AS team_member
+            ) AS team_member,
+            t.id as teamId,
+            u.id as userId
         FROM
             team t
         LEFT JOIN team_data td ON t.id = td.team_id

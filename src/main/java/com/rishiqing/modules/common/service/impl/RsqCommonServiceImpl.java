@@ -1,8 +1,10 @@
 package com.rishiqing.modules.common.service.impl;
 
 import cn.jeeweb.modules.sys.security.shiro.realm.UserRealm;
+import cn.jeeweb.modules.sys.utils.PhoneFormatCheckUtils;
 import cn.jeeweb.modules.sys.utils.UserUtils;
 import com.rishiqing.core.constant.RsqSystemConstants;
+import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 import com.rishiqing.modules.common.mapper.RsqCommonMapper;
@@ -39,7 +41,7 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
         return false;
     }
 
-    @Autowired
+    @Override
     public RsqUser getUserInfoInRishiqingDB(){
         //获取当前用户信息
         UserRealm.Principal principal = UserUtils.getPrincipal();
@@ -49,10 +51,24 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
         if(username.contains("@")){
             queryMap.put("email", username);
         }else{
-            queryMap.put("phone", username);
+            if(PhoneFormatCheckUtils.isChinaPhoneLegal(username)){
+                queryMap.put("phone", username);
+            }else{
+                return null;
+            }
         }
         queryMap.put("teamName", RsqSystemConstants.companyName);
         return rsqCommonMapper.getUserInfoInRishiqingDB(queryMap);
+    }
+
+    @Override
+    public RsqUser getUserInfoInRishiqingDBById(Integer userId) {
+        List<RsqUser> rsqUserList = rsqCommonMapper.getUserInfoInRishiqingDBById(userId);
+        if(rsqUserList != null && rsqUserList.size() > 0){
+            return rsqUserList.get(0);
+        }else{
+            return null;
+        }
     }
 
     @Override
@@ -68,6 +84,11 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     @Override
     public RsqTeamVersion getTeamVersion(String versionName) {
         return rsqCommonMapper.getTeamVersion(versionName);
+    }
+
+    @Override
+    public RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId) {
+        return rsqCommonMapper.getRsqPayProductByTeamVersionId(teamVersionId);
     }
 }
 

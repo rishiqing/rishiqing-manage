@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.rishiqing.modules.userstatistic.mapper.RsqUserStatisticMapper" >
+<mapper namespace="com.rishiqing.modules.common.mapper.RsqCommonMapper" >
 
     <!-- 用户map -->
     <resultMap id="rsqUserMap" type="com.rishiqing.modules.common.entity.RsqUser" >
@@ -11,7 +11,6 @@
         <id column="team_id" property="teamId" jdbcType="VARCHAR" />
         <!-- 公司名字 -->
         <id column="team_name" property="teamName" jdbcType="VARCHAR" />
-
         <!-- 邮箱 -->
         <id column="email" property="email" jdbcType="VARCHAR" />
         <!-- 是否验证过邮箱 -->
@@ -24,6 +23,8 @@
         <id column="avatar" property="avatar" jdbcType="VARCHAR" />
         <!-- 个人设置名称 -->
         <id column="name" property="name" jdbcType="VARCHAR" />
+        <!-- username -->
+        <id column="username" property="username" jdbcType="VARCHAR" />
     </resultMap>
 
     <!-- team版本信息map -->
@@ -62,7 +63,8 @@
             a.`password`,
             a.phone_number,
             a.avatar,
-            a.`name`
+            a.`name`,
+            u.username
         FROM
         USER u,
         account a,
@@ -72,11 +74,46 @@
         AND t.id = u.team_id
         AND t.`name` = '北京创仕科锐信息技术有限公司'
         AND t.is_display = TRUE
-        <if test="email != null">
-            AND a.email =  "#{email}"
+        <if test="params.email != null">
+            AND a.email =  #{params.email}
         </if>
-        <if test="phone != null">
-            AND a.phone_number = "#{phone}"
+        <if test="params.phone != null">
+            AND a.phone_number = #{params.phone}
         </if>
+    </select>
+
+    <!-- 获取日事清用户信息 -->
+    <select id="getUserInfoInRishiqingDBById" resultMap="rsqUserMap">
+        SELECT
+        u.id,
+        t.id AS team_id,
+        t.`name` AS team_name,
+        a.account_locked,
+        a.email,
+        a.is_check_email,
+        a.`password`,
+        a.phone_number,
+        a.avatar,
+        a.`name`,
+        u.username
+        FROM
+        USER u,
+        account a,
+        team t
+        WHERE
+        u.account_id = a.id
+        AND t.id = u.team_id
+        AND t.is_display = TRUE
+        AND u.id = #{id}
+    </select>
+
+    <!-- 获取版本信息 -->
+    <select id="getTeamVersion" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
+      SELECT id, type from team_version WHERE type = #{versionName}
+    </select>
+
+    <!-- 获取产品信息 -->
+    <select id="getRsqPayProductByTeamVersionId" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
+        SELECT * from pay_product WHERE team_version_id = #{teamVersionId}
     </select>
 </mapper>

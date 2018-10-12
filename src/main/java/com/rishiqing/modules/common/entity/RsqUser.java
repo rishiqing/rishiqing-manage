@@ -11,6 +11,12 @@ public class RsqUser {
     //帐号是否被锁住
     private boolean accountLocked = false;
 
+    //用户所在公司id
+    private Integer teamId;
+
+    //用户所在公司name
+    private String teamName;
+
     //邮箱
     private String email;
 
@@ -28,6 +34,16 @@ public class RsqUser {
 
     //个人设置改的名字
     private String name;
+
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public Integer getId() {
         return id;
@@ -91,5 +107,21 @@ public class RsqUser {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 }

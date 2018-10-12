@@ -73,7 +73,45 @@ public class RsqUserStatistic extends AbstractEntity<String> {
     @TableField(value = "user_type")
 	private String userType;
 
-    /**
+	/**
+	 * 登录次数
+	 */
+	@TableField(value = "login_cnt")
+	private Integer loginCnt;
+
+	//用户id
+	@TableField(value = "userId")
+	private Integer userId;
+
+	//公司id
+	@TableField(value = "teamId")
+	private Integer teamId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
+	}
+
+	public Integer getLoginCnt() {
+		return loginCnt;
+	}
+
+	public void setLoginCnt(Integer loginCnt) {
+		this.loginCnt = loginCnt;
+	}
+
+	/**
 	 * 注册天数
      */
     private String registDay;

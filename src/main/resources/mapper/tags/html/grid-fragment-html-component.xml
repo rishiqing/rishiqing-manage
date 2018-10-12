@@ -369,6 +369,13 @@
 				               		  href +="onclick=\"deleteRowData('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid')\"";
 				                  <#elseif buttonItem.function=='rowConfirm'>
 				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','"+row.id+"','${(id)}Grid','${buttonItem.tipMsg!}')\"";
+
+				                 <#elseif buttonItem.function=='openCompany'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.teamId+"','${buttonItem.tipMsg!}')\"";
+
+				                 <#elseif buttonItem.function=='openUser'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.tipMsg!}')\"";
+
 				                 <#else>
 				                      href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.id+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
 				                 </#if>

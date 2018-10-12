@@ -45,7 +45,7 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
      */
     private Map<String, Object> getEffectiveParams(Map<String, Object> allMap){
         //定义有效参数范围
-        String[] paramsArr = new String[]{"name", "email", "phone", "registDate", "lastLoginDate"};
+        String[] paramsArr = new String[]{"name", "email", "phone", "registDate", "lastLoginDate", "teamId"};
         //定义返回值
         Map<String, Object> resMap = new HashMap<>();
         for(String tempParam : paramsArr){

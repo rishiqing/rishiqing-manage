@@ -57,7 +57,28 @@ public class RsqTeamManage extends AbstractEntity<String> {
     /**成员数*/
     @TableField(value = "team_member")
 	private Integer teamMember;
-	
+
+	//用户id
+	private Integer userId;
+	//公司id
+	private Integer teamId;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
+
+	public Integer getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(Integer teamId) {
+		this.teamId = teamId;
+	}
+
 	/**
 	 * 获取  id
 	 *@return: String  字段主键

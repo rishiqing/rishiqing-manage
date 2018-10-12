@@ -3,7 +3,9 @@ package com.rishiqing.modules.common.mapper;
 import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Map; /**
  * @Title: 通用service，用来获取版本号，付费字段等信息
  * @Description:
@@ -19,15 +21,22 @@ public interface RsqCommonMapper{
      * @param queryMap
      * @return
      */
-    RsqUser getUserInfoInRishiqingDB(Map<String, String> queryMap);
+    RsqUser getUserInfoInRishiqingDB(@Param("params")Map<String, String> queryMap);
+
+    /**
+     * 通过用户id获取用户信息
+     * @param userId
+     * @return
+     */
+    List<RsqUser> getUserInfoInRishiqingDBById(@Param("id")Integer userId);
 
     /**
      * 获取team版本信息
      */
-    RsqTeamVersion getTeamVersion(String versionName);
+    RsqTeamVersion getTeamVersion(@Param("versionName") String versionName);
 
     /**
      * 获取产品信息，通过购买版本
      */
-    RsqPayProduct getPayProduct(String versionName);
+    RsqPayProduct getRsqPayProductByTeamVersionId(@Param("teamVersionId") Integer teamVersionId);
 }
