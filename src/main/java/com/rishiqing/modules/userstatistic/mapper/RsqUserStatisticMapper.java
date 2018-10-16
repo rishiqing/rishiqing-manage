@@ -33,6 +33,13 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
     int rsqUserStatisticCount(Map map);
 
     /**
+     * 通过用户id获取用户登录信息
+     * @param userId
+     * @return
+     */
+    RsqUserStatistic getUserLoginInfo(Integer userId);
+
+    /**
      * 获取全面的统计数据
      */
     List<RsqSystemStatistic> getRsqSystemStatistic();

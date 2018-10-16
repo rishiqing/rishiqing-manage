@@ -78,8 +78,6 @@
         a.email AS email,
         a.phone_number AS phone,
         ur.reg_date AS regist_date,
-        ld.login_date as last_login_date,
-        ld.login_cnt as login_cnt,
         t.`name` AS teamName,
         ts.user_limit AS teamNumber,
         ur.client AS date_from,
@@ -93,18 +91,6 @@
         USER u
         LEFT JOIN team t ON t.id = u.team_id
         LEFT JOIN team_status ts ON ts.team_id = t.id
-        LEFT JOIN (
-      SELECT
-      count(*) as login_cnt,
-      user_id,
-      login_date
-      FROM
-      user_login
-      GROUP BY
-      user_id
-      ORDER BY
-      login_date DESC
-      ) as ld ON ld.user_id = u.id
     WHERE
         u.account_id = a.id
     AND ur.account_id = a.id
@@ -146,6 +132,21 @@
         <if test="phone != null and phone != '' ">
             AND INSTR(a.phone_number, #{phone})
         </if>
+    </select>
+
+    <select id="getUserLoginInfo" resultType="com.rishiqing.modules.userstatistic.entity.RsqUserStatistic">
+        SELECT
+          count(*) as login_cnt,
+          user_id,
+          login_date
+        FROM
+          user_login
+          WHERE
+          user_id = #{0}
+          GROUP BY
+          user_id
+          ORDER BY
+          login_date DESC
     </select>
 
     <!-- 获取日事清系统后台数据统计信息 -->
