@@ -21,6 +21,9 @@ public interface RsqTeamManageMapper extends BaseMapper<RsqTeamManage> {
 
     List<RsqTeamManage> ajaxList(RowBounds var1, Map map);
 
+    /** 统计数量 */
+    int rsqTeamManageCount(Map map);
+
     /**
      * 通过id获取团队信息
      * @param id

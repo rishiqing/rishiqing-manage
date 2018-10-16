@@ -93,7 +93,10 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
             temp.setRegistDay((int)day + "天");
         }
         page.setRecords(rsqUserStatisticList);
-        return new PageImpl<>(page.getRecords(), queryable.getPageable(), page.getTotal());
+
+        //获取总数量
+        int count = this.baseMapper.rsqUserStatisticCount(map);
+        return new PageImpl<>(page.getRecords(), queryable.getPageable(), count);
     }
 
     @Override

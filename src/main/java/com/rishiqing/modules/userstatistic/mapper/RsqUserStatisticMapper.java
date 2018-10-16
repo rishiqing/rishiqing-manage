@@ -28,6 +28,11 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
     List<RsqUserStatistic> ajaxList(RowBounds var1, Map map);
 
     /**
+     * 用户数据量统计
+     */
+    int rsqUserStatisticCount(Map map);
+
+    /**
      * 获取全面的统计数据
      */
     List<RsqSystemStatistic> getRsqSystemStatistic();

@@ -71,10 +71,10 @@
     AND po.team_id = t.id
     AND td.team_id = t.id
     <if test="teamName != null">
-      AND t.name LIKE  "%"#{teamName}"%"
+      AND INSTR(t.name, #{teamName}) > 0
     </if>
     <if test="contacts != null">
-      AND td.contacts LIKE  "%"#{contacts}"%"
+      AND INSTR(td.contacts, #{contacts}) > 0
     </if>
     <if test="payBeginDate != null">
       AND po.date_created >= #{payBeginDate}
