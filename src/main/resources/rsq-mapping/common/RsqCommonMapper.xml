@@ -72,7 +72,7 @@
         WHERE
         u.account_id = a.id
         AND t.id = u.team_id
-        AND t.`name` = '北京创仕科锐信息技术有限公司'
+        AND t.`name` in ('北京创仕科锐信息技术有限公司', '日事清新兵营')
         AND t.is_display = TRUE
         <if test="params.email != null">
             AND a.email =  #{params.email}
