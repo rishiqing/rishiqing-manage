@@ -255,7 +255,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Override
     public boolean judgeUserPermission() {
-        return rsqCommonService.judgeUserPermission();
+        return true;
+//        return rsqCommonService.judgeUserPermission();
     }
 
     /**
