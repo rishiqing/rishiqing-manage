@@ -71,8 +71,6 @@
                     <span>默认账号密码:<b>admin/123456</span>
                 </div>--%>
                 <hr>
-                <p>如果您没有帐号? <a id="btn-register" href="#">请注册</a>
-                </p>
             </div>
         </form>
     </div>
