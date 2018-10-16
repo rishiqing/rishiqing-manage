@@ -48,4 +48,16 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
      * @return
      */
     List<RsqDayStatistic> getRsqDayStatistic(Map map);
+
+
+    /**
+     * 账号激活
+     * @return
+     */
+    int userActive(String userId);
+
+    /**
+     * 账号注销(冻结)
+     */
+    int userFreeze(String userId);
 }

@@ -124,4 +124,14 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
         //钉钉统计暂时不计入统计
         return rsqSystemStatistic;
     }
+
+    @Override
+    public void userActive(String userId) {
+        this.baseMapper.userActive(userId);
+    }
+
+    @Override
+    public void userFreeze(String userId) {
+        this.baseMapper.userFreeze(userId);
+    }
 }

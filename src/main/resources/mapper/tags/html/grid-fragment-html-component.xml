@@ -376,8 +376,21 @@
 				                 <#elseif buttonItem.function=='openUser'>
 				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.tipMsg!}')\"";
 
+				                 <#elseif buttonItem.function=='userActive'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+
+				                 <#elseif buttonItem.function=='userFreeze'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+
+				                 <#elseif buttonItem.function=='updatePassword'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+
+				                 <#elseif buttonItem.function=='bindingAccount'>
+				                 	  href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid', '"+row.userId+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+
+
 				                 <#else>
-				                      href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.id+"','${buttonItem.winwidth!}','${buttonItem.winheight!}')\"";
+				                      href +="onclick=\"${buttonItem.function!}('${buttonItem.title!}','${buttonItem.url!}','${(id)}Grid','"+row.id+"','${buttonItem.winheight!}')\"";
 				                 </#if>
 				            </#if>
 				        </#if>

@@ -21,6 +21,8 @@
     <result column="linked_phone" property="linkedPhone" jdbcType="VARCHAR" />
     <!-- 充值天数 -->
     <result column="days" property="days" jdbcType="VARCHAR" />
+    <!-- 充值记录描述 -->
+    <result column="description" property="desc" jdbcType="VARCHAR" />
     <!-- 用户id -->
     <result column="userId" property="userId" jdbcType="INTEGER"/>
     <!-- 用户id -->
@@ -57,6 +59,7 @@
       td.contacts as contacts,
       td.phone_number as linked_phone,
       po.days as days,
+      po.body as description,
       t.id as teamId
     FROM
         pay_order po,

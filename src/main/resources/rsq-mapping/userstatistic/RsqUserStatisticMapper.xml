@@ -28,6 +28,8 @@
       <result column="teamId" property="teamId" jdbcType="INTEGER"/>
       <!-- 登录次数 -->
       <result column="login_cnt" property="loginCnt" jdbcType="INTEGER" />
+      <!-- 用户是否冻结 -->
+      <result column="account_locked" property="accountLocked" jdbcType="BOOLEAN" />
   </resultMap>
 
     <!-- 系统统计数据存储map -->
@@ -83,7 +85,8 @@
         ur.client AS date_from,
         ur.client AS date_channel,
         t.id AS teamId,
-        u.id AS userId
+        u.id AS userId,
+        u.is_display as account_locked
     FROM
         account a,
         user_register ur,
@@ -152,4 +155,14 @@ FROM
         )t
     </select>
 
+    <!-- 账号激活 -->
+    <update id="userActive" >
+        UPDATE `user` SET is_display = TRUE WHERE id = #{0}
+    </update>
+
+    <!-- 账号注销 -->
+    <update id="userFreeze" >
+        UPDATE `user` SET is_display = FALSE WHERE id = #{0}
+    </update>
+    
 </mapper>

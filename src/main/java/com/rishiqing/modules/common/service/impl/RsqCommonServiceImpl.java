@@ -7,6 +7,7 @@ import com.rishiqing.core.constant.RsqSystemConstants;
 import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
+
 import com.rishiqing.modules.common.mapper.RsqCommonMapper;
 import com.rishiqing.modules.common.service.IRsqCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**   
+/**
  * @Title: 团队管理
  * @Description: 团队管理
  * @author rishiqing
  * @date 2018-09-19 18:31:34
- * @version V1.0   
+ * @version V1.0
  *
  */
 @Transactional
@@ -30,7 +31,7 @@ import java.util.Map;
 public class RsqCommonServiceImpl implements IRsqCommonService {
 
     @Autowired
-    RsqCommonMapper rsqCommonMapper;
+    private RsqCommonMapper rsqCommonMapper;
 
     @Override
     public boolean judgeUserPermission() {

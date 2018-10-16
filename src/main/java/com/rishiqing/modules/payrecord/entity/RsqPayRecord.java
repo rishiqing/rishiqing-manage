@@ -69,8 +69,19 @@ public class RsqPayRecord extends AbstractEntity<String> {
     /**充值天数*/
     @TableField(value = "days")
 	private String days;
+    /** 充值记录描述 */
+    @TableField(value = "desc")
+	private String desc;
 
-    //用户id
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	//用户id
     private Integer userId;
     //公司id
     private Integer teamId;

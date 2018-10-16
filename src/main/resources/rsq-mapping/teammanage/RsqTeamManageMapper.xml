@@ -131,11 +131,20 @@
     <!-- 更新teamStatus信息 -->
     <update id="updateTeamStatus" parameterType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
         UPDATE team_status
-            SET team_version_id = #{teamVersionId},
-            user_limit = #{userLimit},
-            last_updated = #{lastUpdated},
-            dead_line = #{deadLine},
-            is_expired = #{isExpired}
+            SET is_expired = #{isExpired}
+            <if test="teamVersionId != null">
+              ,team_version_id = #{teamVersionId}
+            </if>
+            <if test="userLimit != null">
+              ,user_limit = #{userLimit}
+            </if>
+            <if test="lastUpdated != null" >
+              ,last_updated = #{lastUpdated}
+            </if>
+            <if test="deadLine != null" >
+              ,dead_line = #{deadLine}
+            </if>
+
         WHERE
             id = #{id}
     </update>
