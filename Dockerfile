@@ -1,4 +1,4 @@
-FROM registry-vpc.cn-beijing.aliyuncs.com/rsq-public/tomcat:8.0.50-jre8-memcached-v3
+FROM registry-vpc.cn-beijing.aliyuncs.com/rsq-public/tomcat:8.0.50-jre8-memcached-v2
 
 LABEL name="rishiqing-back-end-admin" \
        description="backend admin for rishiqing server V2" \
