@@ -1,7 +1,7 @@
 FROM registry-vpc.cn-beijing.aliyuncs.com/rsq-public/tomcat:8.0.50-jre8-memcached-v3
 
-LABEL name="rishiqing-back-end" \
-       description="backend for rishiqing server V2" \
+LABEL name="rishiqing-back-end-admin" \
+       description="backend admin for rishiqing server V2" \
        maintainer="rishiqing group" \
        org="rishiqing"
 
@@ -10,12 +10,12 @@ ENV TIME_ZONE=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone
 
 # path of config file
-ENV RISHIQING_BACK_END_CONFIG_PATH=/etc/rishiqing/rishiqing-v2-main/conf
+#ENV RISHIQING_BACK_END_CONFIG_PATH=/etc/rishiqing/rishiqing-v2-main/conf
 
 ENV CATALINA_HOME=/usr/local/tomcat
 WORKDIR $CATALINA_HOME
 
-ADD task.war webapps/task.war
+ADD admin.war webapps/admin.war
 
 #ARG APP_NAME
 #ARG TIER_NAME
