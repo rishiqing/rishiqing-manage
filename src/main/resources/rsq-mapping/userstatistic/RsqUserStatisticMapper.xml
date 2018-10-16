@@ -134,12 +134,9 @@
         SELECT
           count(1)
         FROM
-        account a,
-        user_register ur,
-        USER u
+          account a
         WHERE
-        u.account_id = a.id
-        AND ur.account_id = a.id
+          1=1
         <if test="name != null and name != '' ">
             AND INSTR(a.name, #{name}) > 0
         </if>
@@ -148,12 +145,6 @@
         </if>
         <if test="phone != null and phone != '' ">
             AND INSTR(a.phone_number, #{phone})
-        </if>
-        <if test="registBeginDate != null">
-            AND ur.reg_date >=  #{registBeginDate}
-        </if>
-        <if test="registEndDate != null">
-            AND #{registEndDate} >= ur.reg_date
         </if>
     </select>
 
