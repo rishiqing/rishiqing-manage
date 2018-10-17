@@ -87,7 +87,7 @@
         u.is_display as account_locked
     FROM
         account a,
-        user_register ur,
+        user_register ur force INDEX(index_regdate_account),
         USER u
         LEFT JOIN team t ON t.id = u.team_id
         LEFT JOIN team_status ts ON ts.team_id = t.id

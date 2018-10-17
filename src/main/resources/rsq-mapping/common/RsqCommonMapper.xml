@@ -97,13 +97,12 @@
         a.`name`,
         u.username
         FROM
-        USER u,
         account a,
-        team t
+        USER u
+        LEFT JOIN team t ON t.id = u.team_id
         WHERE
         u.account_id = a.id
-        AND t.id = u.team_id
-        AND t.is_display = TRUE
+        AND u.is_display = TRUE
         AND u.id = #{id}
     </select>
 
