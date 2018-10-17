@@ -91,9 +91,22 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
             Date registDate = temp.getRegistDate();
             double day = DateUtils.getDistanceOfTwoDate(registDate, new Date());
             temp.setRegistDay((int)day + "天");
+
+            //根据用户id获取用户登录信息
+            RsqUserStatistic userLoginInfo = this.baseMapper.getUserLoginInfo(temp.getUserId());
+            if(userLoginInfo != null){
+                //用户登录次数
+                temp.setLoginCnt(userLoginInfo.getLoginCnt());
+                //最后登录时间
+                temp.setLastLoginDate(userLoginInfo.getLastLoginDate());
+            }
         }
+
         page.setRecords(rsqUserStatisticList);
-        return new PageImpl<>(page.getRecords(), queryable.getPageable(), page.getTotal());
+
+        //获取总数量
+        int count = this.baseMapper.rsqUserStatisticCount(map);
+        return new PageImpl<>(page.getRecords(), queryable.getPageable(), count);
     }
 
     @Override
@@ -123,5 +136,15 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
 
         //钉钉统计暂时不计入统计
         return rsqSystemStatistic;
+    }
+
+    @Override
+    public void userActive(String userId) {
+        this.baseMapper.userActive(userId);
+    }
+
+    @Override
+    public void userFreeze(String userId) {
+        this.baseMapper.userFreeze(userId);
     }
 }

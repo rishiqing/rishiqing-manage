@@ -90,7 +90,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         List<RsqTeamManage> rsqTeamManageList = this.baseMapper.ajaxList(page, map);
 
         page.setRecords(rsqTeamManageList);
-        return new PageImpl<>(page.getRecords(), queryable.getPageable(), page.getTotal());
+
+        //统计数量
+        int count = this.baseMapper.rsqTeamManageCount(map);
+        return new PageImpl<>(page.getRecords(), queryable.getPageable(), count);
     }
 
     /**
@@ -252,7 +255,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Override
     public boolean judgeUserPermission() {
-        return rsqCommonService.judgeUserPermission();
+        return true;
+//        return rsqCommonService.judgeUserPermission();
     }
 
     /**

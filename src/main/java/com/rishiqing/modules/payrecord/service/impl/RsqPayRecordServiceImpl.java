@@ -82,20 +82,20 @@ public class RsqPayRecordServiceImpl  extends CommonServiceImpl<RsqPayRecordMapp
         Map<String, Object> map = createConditionMap(request);
         List<RsqPayRecord> rsqPayRecordList = this.baseMapper.ajaxList(page, map);
 
-        //加工返回数据
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        for(RsqPayRecord temp : rsqPayRecordList){
-            //充值时间
-            Date payDate = temp.getPayDate();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(payDate);
-            //充值天数
-            String days = temp.getDays();
-            //计算到期日期
-            calendar.add(Calendar.DATE, Integer.parseInt(days));
-            Date deadLine = calendar.getTime();
-            temp.setDeadline(deadLine);
-        }
+//        //加工返回数据
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        for(RsqPayRecord temp : rsqPayRecordList){
+//            //充值时间
+//            Date payDate = temp.getPayDate();
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(payDate);
+//            //充值天数
+//            String days = temp.getDays();
+//            //计算到期日期
+//            calendar.add(Calendar.DATE, Integer.parseInt(days));
+//            Date deadLine = calendar.getTime();
+//            temp.setDeadline(deadLine);
+//        }
 
         page.setRecords(rsqPayRecordList);
         return new PageImpl<>(page.getRecords(), queryable.getPageable(), page.getTotal());

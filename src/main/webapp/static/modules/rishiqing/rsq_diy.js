@@ -21,7 +21,8 @@ function pay(title,url, gridId, infoId ,width,height){
         content: url ,
         btn: ['关闭'],
         cancel: function(index){
-
+            //刷新表单
+            refreshTable(gridId);
         }
     });
 }
@@ -58,7 +59,7 @@ function myReset() {
 /**
  * 查看公司详情页面
  */
-function openCompany(title,url, gridId, infoId ,width,height){
+function openCompany(title,url, gridId, infoId , tipMsg){
     url=url.replace("{id}",infoId);
     window.open(url);
     // width = '100%';
@@ -92,4 +93,116 @@ function openCompany(title,url, gridId, infoId ,width,height){
 function openUser(title,url, gridId, infoId ,width,height){
     url=url.replace("{id}",infoId);
     window.open(url);
+}
+
+
+
+//==========================
+//======修改账号信息==========
+//==========================
+/** 账号激活 */
+function userActive(title,url, gridId, infoId , width,height){
+    var rowData = getSelectRowData(title,url, gridId, infoId ,width,height)
+    if(rowData){
+        alertDialog(title,url,rowData.userId,gridId,"确定激活该账号吗？")
+    }
+}
+
+/** 账号冻结 */
+function userFreeze(title,url, gridId, infoId ,tipMsg, width,height){
+    var rowData = getSelectRowData(title,url, gridId, infoId ,width,height)
+    if(rowData){
+        alertDialog(title,url,rowData.userId,gridId, "确定注销该账号吗？")
+    }
+}
+
+/** 修改密码 */
+function updatePassword(title,url, gridId, infoId ,tipMsg, width,height){
+    var rowData = getSelectRowData(title,url, gridId, infoId ,width,height)
+    if(rowData){
+        top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
+        // top.layer.prompt({title: '请输入新密码，并确认', formType: 1}, function(pass, index){
+        //     top.layer.close(index);
+        //     top.layer.prompt({title: '请再次输入新密码，并确认', formType: 1}, function(passTwo, index){
+        //         top.layer.close(index);
+        //         if(pass == passTwo){
+        //             top.layer.alert("两次输入的密码不一致！")
+        //         }
+        //         layer.msg('演示完毕！您的口令：'+ pass +'<br>您最后写下了：'+text);
+        //     });
+        // });
+        // url=url.replace("{id}",infoId);
+        // top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
+    }
+}
+
+/** 绑定账号 */
+function bindingAccount(title,url, gridId, infoId ,tipMsg, width,height){
+    var rowData = getSelectRowData(title,url, gridId, infoId ,width,height)
+    if(rowData){
+        url=url.replace("{id}",infoId);
+        top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
+    }
+}
+
+/** 获取选中行 */
+function getSelectRowData(title,url, gridId, infoId ,width,height){
+    var rowsData = $("#"+gridId).jqGrid('getGridParam','selarrrow');
+    var multiselect=$("#"+gridId).jqGrid('getGridParam','multiselect');
+    var rowData= $("#"+gridId).jqGrid('getGridParam','selrow');
+    if(!multiselect)
+    {
+        if(rowData)
+        {
+            rowsData[0]=rowData;
+        }
+    }
+    if (!rowsData || rowsData.length==0) {
+        top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
+        return;
+    }
+    if (rowsData.length>1) {
+        top.layer.alert('只能选择一条数据!', {icon: 0, title:'警告'});
+        return;
+    }
+    rowData = $("#"+gridId).jqGrid('getRowData', rowData);
+    return rowData
+}
+
+/** 确认提示框 */
+function alertDialog(title,url,infoid,gridId,tipMsg){
+    url=url.replace("{id}",infoid);
+    if(tipMsg==undefined||tipMsg==''){
+        tipMsg="您确定要执行该操作！";
+    }
+    swal({
+        title: "提示",
+        text: tipMsg,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "确定",
+        closeOnConfirm: false,
+        cancelButtonText: "取消",
+    }, function () {
+        $.ajax({
+            url : url,
+            type : 'post',
+            data : {
+                id : infoid
+            },
+            cache : false,
+            success : function(d) {
+                if (d.ret==0) {
+                    var msg = d.msg;
+                    swal("提示！", msg, "success");
+                    //刷新表单
+                    refreshTable(gridId);
+                }else{
+                    var msg = d.msg;
+                    swal("提示！", msg, "error");
+                }
+            }
+        });
+    });
 }

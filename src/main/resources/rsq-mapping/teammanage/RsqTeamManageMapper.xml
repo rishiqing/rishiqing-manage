@@ -65,7 +65,7 @@
       WHERE
           tur.role = 'creator'
           <if test="teamName != null">
-              AND t.name LIKE  "%"#{teamName}"%"
+              AND INSTR(t.name, #{teamName}) > 0
           </if>
           <if test="createBeginDate != null">
               AND t.date_created >= #{createBeginDate}
@@ -77,6 +77,24 @@
             t.date_created DESC
   </select>
 
+    <!-- 统计数量 -->
+    <select id="rsqTeamManageCount" resultType="java.lang.Integer">
+        SELECT
+          count(1)
+        FROM
+          team t
+        WHERE
+          1 = 1
+        <if test="teamName != null">
+            AND INSTR(t.name, #{teamName}) > 0
+        </if>
+        <if test="createBeginDate != null">
+            AND t.date_created >= #{createBeginDate}
+        </if>
+        <if test="createEndDate != null">
+            AND #{createEndDate} >= t.date_created
+        </if>
+    </select>
 
     <!-- 通过id获取团队信息 -->
     <select id="getRsqTeamManageById" resultType="com.rishiqing.modules.teammanage.entity.RsqTeamManage">
@@ -131,11 +149,20 @@
     <!-- 更新teamStatus信息 -->
     <update id="updateTeamStatus" parameterType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
         UPDATE team_status
-            SET team_version_id = #{teamVersionId},
-            user_limit = #{userLimit},
-            last_updated = #{lastUpdated},
-            dead_line = #{deadLine},
-            is_expired = #{isExpired}
+            SET is_expired = #{isExpired}
+            <if test="teamVersionId != null">
+              ,team_version_id = #{teamVersionId}
+            </if>
+            <if test="userLimit != null">
+              ,user_limit = #{userLimit}
+            </if>
+            <if test="lastUpdated != null" >
+              ,last_updated = #{lastUpdated}
+            </if>
+            <if test="deadLine != null" >
+              ,dead_line = #{deadLine}
+            </if>
+
         WHERE
             id = #{id}
     </update>

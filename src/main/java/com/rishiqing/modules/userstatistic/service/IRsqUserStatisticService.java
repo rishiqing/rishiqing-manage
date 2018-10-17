@@ -21,6 +21,12 @@ import java.util.Map;
  */
 public interface IRsqUserStatisticService extends ICommonService<RsqUserStatistic> {
 
+    /**
+     * 获取所有用户
+     * @param queryable
+     * @param request
+     * @return
+     */
     Page<RsqUserStatistic> ajaxList(Queryable queryable, HttpServletRequest request);
 
     /**
@@ -28,5 +34,15 @@ public interface IRsqUserStatisticService extends ICommonService<RsqUserStatisti
      * @return
      */
     RsqSystemStatistic getMainPageInfo();
+
+    /**
+     * 账号激活
+     */
+    void userActive(String userId);
+
+    /**
+     * 账号注销
+     */
+    void userFreeze(String userId);
 }
 

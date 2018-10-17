@@ -79,6 +79,17 @@ public class RsqUserStatistic extends AbstractEntity<String> {
 	@TableField(value = "login_cnt")
 	private Integer loginCnt;
 
+	@TableField(value = "account_locked")
+	private Boolean accountLocked;
+
+	public Boolean getAccountLocked() {
+		return accountLocked;
+	}
+
+	public void setAccountLocked(Boolean accountLocked) {
+		this.accountLocked = accountLocked;
+	}
+
 	//用户id
 	@TableField(value = "userId")
 	private Integer userId;

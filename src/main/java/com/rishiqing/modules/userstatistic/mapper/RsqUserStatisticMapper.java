@@ -28,6 +28,18 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
     List<RsqUserStatistic> ajaxList(RowBounds var1, Map map);
 
     /**
+     * 用户数据量统计
+     */
+    int rsqUserStatisticCount(Map map);
+
+    /**
+     * 通过用户id获取用户登录信息
+     * @param userId
+     * @return
+     */
+    RsqUserStatistic getUserLoginInfo(Integer userId);
+
+    /**
      * 获取全面的统计数据
      */
     List<RsqSystemStatistic> getRsqSystemStatistic();
@@ -48,4 +60,16 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
      * @return
      */
     List<RsqDayStatistic> getRsqDayStatistic(Map map);
+
+
+    /**
+     * 账号激活
+     * @return
+     */
+    int userActive(String userId);
+
+    /**
+     * 账号注销(冻结)
+     */
+    int userFreeze(String userId);
 }

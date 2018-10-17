@@ -28,6 +28,8 @@
       <result column="teamId" property="teamId" jdbcType="INTEGER"/>
       <!-- 登录次数 -->
       <result column="login_cnt" property="loginCnt" jdbcType="INTEGER" />
+      <!-- 用户是否冻结 -->
+      <result column="account_locked" property="accountLocked" jdbcType="BOOLEAN" />
   </resultMap>
 
     <!-- 系统统计数据存储map -->
@@ -76,43 +78,30 @@
         a.email AS email,
         a.phone_number AS phone,
         ur.reg_date AS regist_date,
-        ld.login_date as last_login_date,
-        ld.login_cnt as login_cnt,
         t.`name` AS teamName,
         ts.user_limit AS teamNumber,
         ur.client AS date_from,
         ur.client AS date_channel,
         t.id AS teamId,
-        u.id AS userId
+        u.id AS userId,
+        u.is_display as account_locked
     FROM
         account a,
         user_register ur,
         USER u
         LEFT JOIN team t ON t.id = u.team_id
         LEFT JOIN team_status ts ON ts.team_id = t.id
-        LEFT JOIN (
-      SELECT
-      count(*) as login_cnt,
-      user_id,
-      login_date
-      FROM
-      user_login
-      GROUP BY
-      user_id
-      ORDER BY
-      login_date DESC
-      ) as ld ON ld.user_id = u.id
     WHERE
         u.account_id = a.id
     AND ur.account_id = a.id
       <if test="name != null and name != '' ">
-          AND a.name LIKE  "%"#{name}"%"
+          AND INSTR(a.name, #{name}) > 0
       </if>
       <if test="email != null and email != '' ">
-          AND a.email LIKE  "%"#{email}"%"
+          AND INSTR(a.email, #{email}) > 0
       </if>
       <if test="phone != null and phone != '' ">
-          AND a.phone_number LIKE  "%"#{phone}"%"
+          AND INSTR(a.phone_number, #{phone})
       </if>
       <if test="registBeginDate != null">
           AND ur.reg_date >=  #{registBeginDate}
@@ -126,7 +115,39 @@
     ORDER BY
         ur.reg_date DESC
   </select>
-  
+
+    <select id="rsqUserStatisticCount" resultType="java.lang.Integer">
+        SELECT
+          count(1)
+        FROM
+          account a
+        WHERE
+          1=1
+        <if test="name != null and name != '' ">
+            AND INSTR(a.name, #{name}) > 0
+        </if>
+        <if test="email != null and email != '' ">
+            AND INSTR(a.email, #{email}) > 0
+        </if>
+        <if test="phone != null and phone != '' ">
+            AND INSTR(a.phone_number, #{phone})
+        </if>
+    </select>
+
+    <select id="getUserLoginInfo" resultType="com.rishiqing.modules.userstatistic.entity.RsqUserStatistic">
+        SELECT
+          count(*) as login_cnt,
+          user_id,
+          login_date
+        FROM
+          user_login
+          WHERE
+          user_id = #{0}
+          GROUP BY
+          user_id
+          ORDER BY
+          login_date DESC
+    </select>
 
     <!-- 获取日事清系统后台数据统计信息 -->
     <select id="getRsqSystemStatistic" resultMap="systemStatistic">
@@ -152,4 +173,14 @@ FROM
         )t
     </select>
 
+    <!-- 账号激活 -->
+    <update id="userActive" >
+        UPDATE `user` SET is_display = TRUE WHERE id = #{0}
+    </update>
+
+    <!-- 账号注销 -->
+    <update id="userFreeze" >
+        UPDATE `user` SET is_display = FALSE WHERE id = #{0}
+    </update>
+    
 </mapper>
