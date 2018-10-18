@@ -101,6 +101,8 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
                 temp.setLoginCnt(userLoginInfo.getLoginCnt());
                 //最后登录时间
                 temp.setLastLoginDate(userLoginInfo.getLastLoginDate());
+            }else{
+                temp.setLoginCnt(0);
             }
         }
 
