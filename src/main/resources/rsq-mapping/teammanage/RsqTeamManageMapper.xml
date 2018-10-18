@@ -75,6 +75,9 @@
           </if>
         ORDER BY
             t.date_created DESC
+      <if test="offset != null and limit != null ">
+          limit #{offset}, #{limit}
+      </if>
   </select>
 
     <!-- 统计数量 -->

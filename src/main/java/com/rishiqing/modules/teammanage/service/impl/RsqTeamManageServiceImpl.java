@@ -87,7 +87,9 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
                 new com.baomidou.mybatisplus.plugins.Page<>(pageable.getPageNumber(), pageable.getPageSize());
         //参数信息
         Map<String, Object> map = createConditionMap(request);
-        List<RsqTeamManage> rsqTeamManageList = this.baseMapper.ajaxList(page, map);
+        map.put("offset", page.getOffset());
+        map.put("limit", page.getLimit());
+        List<RsqTeamManage> rsqTeamManageList = this.baseMapper.ajaxList(map);
 
         page.setRecords(rsqTeamManageList);
 

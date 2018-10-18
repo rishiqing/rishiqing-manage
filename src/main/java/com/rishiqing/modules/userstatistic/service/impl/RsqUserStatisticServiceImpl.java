@@ -84,7 +84,9 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
                 new com.baomidou.mybatisplus.plugins.Page<>(pageable.getPageNumber(), pageable.getPageSize());
         //参数信息
         Map<String, Object> map = createConditionMap(request);
-        List<RsqUserStatistic> rsqUserStatisticList = this.baseMapper.ajaxList(page, map);
+        map.put("offset", page.getOffset());
+        map.put("limit", page.getLimit());
+        List<RsqUserStatistic> rsqUserStatisticList = this.baseMapper.ajaxList(map);
 
         //返回数据加工
         for(RsqUserStatistic temp : rsqUserStatisticList){

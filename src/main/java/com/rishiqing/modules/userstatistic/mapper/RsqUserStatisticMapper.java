@@ -21,11 +21,10 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
 
     /**
      * 用户数据统计（带分页信息）
-     * @param var1
      * @param map
      * @return
      */
-    List<RsqUserStatistic> ajaxList(RowBounds var1, Map map);
+    List<RsqUserStatistic> ajaxList(Map map);
 
     /**
      * 用户数据量统计

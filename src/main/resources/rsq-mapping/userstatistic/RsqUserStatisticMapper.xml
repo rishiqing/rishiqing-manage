@@ -114,6 +114,9 @@
       </if>
     ORDER BY
         ur.reg_date DESC
+      <if test="offset != null and limit != null ">
+          limit #{offset}, #{limit}
+      </if>
   </select>
 
     <select id="rsqUserStatisticCount" resultType="java.lang.Integer">
