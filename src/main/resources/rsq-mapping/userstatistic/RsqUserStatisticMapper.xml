@@ -101,7 +101,7 @@
           AND INSTR(a.email, #{email}) > 0
       </if>
       <if test="phone != null and phone != '' ">
-          AND INSTR(a.phone_number, #{phone})
+          AND a.phone_number = #{phone}
       </if>
       <if test="registBeginDate != null">
           AND ur.reg_date >=  #{registBeginDate}
@@ -133,7 +133,7 @@
             AND INSTR(a.email, #{email}) > 0
         </if>
         <if test="phone != null and phone != '' ">
-            AND INSTR(a.phone_number, #{phone})
+            AND a.phone_number = #{phone}
         </if>
     </select>
 

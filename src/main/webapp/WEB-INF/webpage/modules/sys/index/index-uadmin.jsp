@@ -133,26 +133,26 @@
                     $("#totalUser").text(data.totalUser);
                     $("#singleUser").text(data.singleUser);
                     $("#teamUser").text(data.teamUser);
-                    $("#waitLoginUser").text(data.waitLoginUser);
-                    $("#effectiveTeam").text(data.effectiveTeam);
-                    $("#invaildTeam").text(data.invaildTeam);
-                    $("#allInviteUser").text(data.allInviteUser);
-                    $("#currentLoginUser").text(data.currentLoginUser);
+//                    $("#waitLoginUser").text(data.waitLoginUser);
+//                    $("#effectiveTeam").text(data.effectiveTeam);
+//                    $("#invaildTeam").text(data.invaildTeam);
+//                    $("#allInviteUser").text(data.allInviteUser);
+//                    $("#currentLoginUser").text(data.currentLoginUser);
 
                     //昨日数据统计
                     $("#yesterday_registUser").text(data.yesterdayStatistic.registUser);
                     $("#yesterday_registTeam").text(data.yesterdayStatistic.registTeam);
-                    $("#yesterday_loginTeam").text(data.yesterdayStatistic.loginTeam);
-                    $("#yesterday_loginUser").text(data.yesterdayStatistic.loginUser);
-                    $("#yesterday_waitLoginUser").text(data.yesterdayStatistic.waitLoginUser);
-                    $("#yesterday_allInviteUser").text(data.yesterdayStatistic.allInviteUser);
+//                    $("#yesterday_loginTeam").text(data.yesterdayStatistic.loginTeam);
+//                    $("#yesterday_loginUser").text(data.yesterdayStatistic.loginUser);
+//                    $("#yesterday_waitLoginUser").text(data.yesterdayStatistic.waitLoginUser);
+//                    $("#yesterday_allInviteUser").text(data.yesterdayStatistic.allInviteUser);
                     //今日数据统计
                     $("#today_registUser").text(data.todayStatistic.registUser);
                     $("#today_registTeam").text(data.todayStatistic.registTeam);
-                    $("#today_loginTeam").text(data.todayStatistic.loginTeam);
-                    $("#today_loginUser").text(data.todayStatistic.loginUser);
-                    $("#today_waitLoginUser").text(data.todayStatistic.waitLoginUser);
-                    $("#today_allInviteUser").text(data.todayStatistic.allInviteUser);
+//                    $("#today_loginTeam").text(data.todayStatistic.loginTeam);
+//                    $("#today_loginUser").text(data.todayStatistic.loginUser);
+//                    $("#today_waitLoginUser").text(data.todayStatistic.waitLoginUser);
+//                    $("#today_allInviteUser").text(data.todayStatistic.allInviteUser);
                 }
             });
         });
