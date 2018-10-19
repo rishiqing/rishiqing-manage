@@ -1,20 +1,25 @@
 package com.rishiqing.modules.userstatistic.service.impl;
 
 import cn.jeeweb.core.common.service.impl.CommonServiceImpl;
-import cn.jeeweb.core.query.data.*;
-import cn.jeeweb.core.query.parse.QueryToWrapper;
+import cn.jeeweb.core.query.data.Page;
+import cn.jeeweb.core.query.data.PageImpl;
+import cn.jeeweb.core.query.data.Pageable;
+import cn.jeeweb.core.query.data.Queryable;
 import cn.jeeweb.core.utils.DateUtils;
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.rishiqing.core.util.CommonUtil;
-import com.rishiqing.modules.userstatistic.entity.*;
+import com.rishiqing.modules.userstatistic.entity.RsqDayStatistic;
+import com.rishiqing.modules.userstatistic.entity.RsqSystemStatistic;
+import com.rishiqing.modules.userstatistic.entity.RsqUserStatistic;
 import com.rishiqing.modules.userstatistic.mapper.RsqUserStatisticMapper;
 import com.rishiqing.modules.userstatistic.service.IRsqUserStatisticService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**   
  * @Title: 日事清用户数据统计
@@ -125,14 +130,19 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
 
         //2、获取今天的统计数据
         Map<String, Object> map = new HashMap<>();
-        Date queryDate = new Date();
-        map.put("queryDate", queryDate);
+        Date today = CommonUtil.delHHMMSS(new Date());
+        Date tomorrow = CommonUtil.addDays(today, 1);
+        map.put("firstDate", today);
+        map.put("lastDate", tomorrow);
         List<RsqDayStatistic> rsqTodayStatisticList = this.baseMapper.getRsqDayStatistic(map);
         if(rsqTodayStatisticList != null && rsqTodayStatisticList.size() > 0){
             rsqSystemStatistic.setTodayStatistic(rsqTodayStatisticList.get(0));
         }
 
         //3、获取昨天的统计数据
+        Date yestoday = CommonUtil.addDays(today, -1);
+        map.put("firstDate", yestoday);
+        map.put("lastDate", today);
         List<RsqDayStatistic> rsqYesterdayStatisticList = this.baseMapper.getRsqDayStatistic(map);
         if(rsqYesterdayStatisticList != null && rsqYesterdayStatisticList.size() > 0){
             rsqSystemStatistic.setYesterdayStatistic(rsqYesterdayStatisticList.get(0));

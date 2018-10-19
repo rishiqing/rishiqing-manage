@@ -50,12 +50,14 @@
 					<grid:column label="手机号"  name="phone"  query="true"  queryMode="input"  condition="like" />
 					<grid:column label="注册时间"  name="registDate"  query="true"  queryMode="date"  condition="between" />
 					<grid:column label="注册时长"  name="registDay"/>
-					<grid:column label="最后登录时间"  name="lastLoginDate"  query="true"  queryMode="date"  condition="between" />
+					<grid:column label="最后登录时间"  name="lastLoginDate"/>
 
 					<grid:column label="公司名称"  name="teamName" />
 					<grid:column label="公司人数"  name="teamNumber" />
 					<grid:column label="数据来源"  name="dateFrom" />
 					<grid:column label="渠道"  name="dateChannel" />
+					<%--<grid:toolbar function="search"/>--%>
+					<%--<grid:toolbar function="reset"/>--%>
 				</grid:grid>
 			</div>
 		</div>

@@ -154,26 +154,32 @@
 
     <!-- 获取日事清系统后台数据统计信息 -->
     <select id="getRsqSystemStatistic" resultMap="systemStatistic">
-SELECT sum(p1) totalUser, sum(p2) singleUser, sum(p3) teamUser, sum(p4) waitLoginUser, sum(p5) totalTeam, sum(p6) effectiveTeam, sum(p7) invaildTeam, sum(p8) allInviteUser, sum(p9) currentLoginUser
-FROM
-(
-	SELECT count(*) p1, 0 p2, 0 p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` GROUP BY id
-	UNION ALL
-	SELECT 0 p1, COUNT(*) p2, 0 p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` WHERE team_id IS NULL GROUP BY id
-	UNION ALL
-	SELECT 0 p1, 0 p2, count(*) p3, 0 p4, 0 p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM `user` WHERE team_id IS NOT NULL GROUP BY id
-	UNION ALL
-	SELECT 0 p1, 0 p2, 0 p3, 0 p4, count(*) p5, 0 p6, 0 p7, 0 p8, 0 p9 FROM team  GROUP BY id
-) t
+        SELECT sum(p1) totalUser, sum(p2) singleUser, sum(p3) teamUser
+        FROM
+        (
+            SELECT count(*) p1, 0 p2, 0 p3 FROM `user`
+            UNION ALL
+            SELECT 0 p1, COUNT(*) p2, 0 p3 FROM `user` WHERE team_id IS NULL
+            UNION ALL
+            SELECT 0 p1, 0 p2, count(*) p3 FROM `user` WHERE team_id IS NOT NULL
+        ) t
     </select>
 
     <!-- 获取日事清系统指定日期相关数据统计信息 -->
     <select id="getRsqDayStatistic" resultMap="dayStatistic">
-        SELECT sum(p1) registUser, sum(p2) registTeam, sum(p3) loginTeam, sum(p4) loginUser, sum(p5) waitLoginUser, sum(p6) allInviteUser
-        FROM
-        (
-        SELECT count(*) p1, 0 p2, 0 p3, 0 p4, 0 p5, 0 p6 FROM user_ui_setting WHERE #{queryDate} >= last_updated
-        )t
+        SELECT sum(t.userCnt) as registUser, sum(t.teamCnt) as registTeam from (
+            SELECT count(1) as userCnt, 0 as teamCnt from user u, account a, user_register ur WHERE
+            u.account_id = a.id
+            AND
+            ur.account_id = a.id
+            AND
+            ur.reg_date BETWEEN #{firstDate} AND #{lastDate}
+
+            UNION ALL
+
+            SELECT 0 as userCnt, count(1) as teamCnt from team WHERE
+            date_created BETWEEN #{firstDate} AND #{lastDate}
+        ) t
     </select>
 
     <!-- 账号激活 -->

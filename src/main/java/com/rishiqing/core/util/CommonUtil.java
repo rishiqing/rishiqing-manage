@@ -60,6 +60,18 @@ public class CommonUtil {
         return calendar.getTime();
     }
 
+    public static Date delHHMMSS(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String s = sdf.format(date);
+        Date newDate = null;
+        try {
+            newDate = sdf.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return newDate;
+    }
+
 
     /**
      * 获取一个随机订单号

@@ -199,14 +199,10 @@ public class RsqUserStatisticController extends RsqBaseBeanController<RsqUserSta
      * 获取首页需要的统计数据
      * @return
      */
-//    @RequestMapping(value = "mainPageInfo", method = RequestMethod.GET)
-//    @ResponseBody
-//    public RsqSystemStatistic mainPageInfo() {
-//        return rsqUserStatisticService.getMainPageInfo();
-//    }
     @RequestMapping(value = "mainPageInfo", method = RequestMethod.GET)
     @ResponseBody
-    public Map mainPageInfo() {
-        return new HashMap();
+    public RsqSystemStatistic mainPageInfo() {
+        return rsqUserStatisticService.getMainPageInfo();
     }
+
 }
