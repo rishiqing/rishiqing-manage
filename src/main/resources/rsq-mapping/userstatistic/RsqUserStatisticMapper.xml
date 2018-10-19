@@ -141,7 +141,7 @@
         SELECT
           count(*) as login_cnt,
           user_id,
-          login_date
+          login_date as last_login_date
         FROM
           user_login
           WHERE
