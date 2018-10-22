@@ -4,7 +4,7 @@ import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * @Title: 通用service，用来获取版本号，付费字段等信息
@@ -56,5 +56,10 @@ public interface IRsqCommonService {
      * 获取专业版产品信息
      */
     RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId);
+
+    /**
+     * 更新指定用户的密码
+     */
+    Map updatePassword(String userId, String pwd);
 }
 

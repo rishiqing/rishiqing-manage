@@ -1,40 +1,25 @@
 package com.rishiqing.modules.common.controller;
 
-import cn.jeeweb.core.common.data.DuplicateValid;
-import cn.jeeweb.core.model.AjaxJson;
-import cn.jeeweb.core.model.PageJson;
-import cn.jeeweb.core.model.ValidJson;
-import cn.jeeweb.core.query.annotation.PageableDefaults;
-import cn.jeeweb.core.query.data.PropertyPreFilterable;
-import cn.jeeweb.core.query.data.Queryable;
-import cn.jeeweb.core.query.wrapper.EntityWrapper;
-import cn.jeeweb.core.security.shiro.authz.annotation.RequiresMethodPermissions;
-import cn.jeeweb.core.security.shiro.authz.annotation.RequiresPathPermission;
-import cn.jeeweb.core.utils.ObjectUtils;
-import cn.jeeweb.core.utils.StringUtils;
-import cn.jeeweb.core.utils.security.Md5Utils;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.rishiqing.core.common.controller.RsqBaseBeanController;
 import com.rishiqing.core.util.AESUtil;
 import com.rishiqing.modules.common.entity.RsqUser;
 import com.rishiqing.modules.common.service.IRsqCommonService;
 import com.rishiqing.modules.payrecord.entity.RsqPayRecord;
-import com.rishiqing.modules.payrecord.service.IRsqPayRecordService;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.teammanage.service.IRsqTeamManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**   
@@ -107,5 +92,23 @@ public class RsqCommonController extends RsqBaseBeanController<RsqPayRecord> {
             targetUrl += "?token=" + AESUtil.encrypt(rsqUser.getUsername(), key);
         }
         return "redirect:" + targetUrl;
+    }
+
+    /**
+     * 修改给定用户密码
+     * @return
+     */
+    @RequestMapping(value = "{id}/updatePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public Map updatePassword(@PathVariable("id") String id, HttpServletRequest request){
+        Map resMap = new HashMap();
+        resMap.put("flag", false);
+        //获取密码
+        String pwd = request.getParameter("pwd");
+        if(pwd == null || id == null){
+            return resMap;
+        }
+        resMap = this.rsqCommonService.updatePassword(id, pwd);
+        return resMap;
     }
 }

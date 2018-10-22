@@ -1,5 +1,9 @@
 ﻿/*	日事清项目相关js存放 */
 
+layer.config({
+    extend: '../../vendors/layer/extend/layer.ext.js'
+});
+
 /**
  * 充值页面弹窗
  */
@@ -120,17 +124,33 @@ function userFreeze(title,url, gridId, infoId ,tipMsg, width,height){
 function updatePassword(title,url, gridId, infoId ,tipMsg, width,height){
     var rowData = getSelectRowData(title,url, gridId, infoId ,width,height)
     if(rowData){
-        top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
-        // top.layer.prompt({title: '请输入新密码，并确认', formType: 1}, function(pass, index){
-        //     top.layer.close(index);
-        //     top.layer.prompt({title: '请再次输入新密码，并确认', formType: 1}, function(passTwo, index){
-        //         top.layer.close(index);
-        //         if(pass == passTwo){
-        //             top.layer.alert("两次输入的密码不一致！")
-        //         }
-        //         layer.msg('演示完毕！您的口令：'+ pass +'<br>您最后写下了：'+text);
-        //     });
-        // });
+        top.layer.prompt({title: '请输入新密码，并确认', formType: 1}, function(pass, index){
+            top.layer.close(index);
+            top.layer.prompt({title: '请再次输入新密码，并确认', formType: 1}, function(passTwo, index){
+                top.layer.close(index);
+                if(pass == passTwo){
+                    url=url.replace("{id}",rowData.id);
+                    $.ajax({
+                        url : url,
+                        type : 'post',
+                        data : {
+                            pwd : pass
+                        },
+                        cache : false,
+                        success : function(data) {
+                            if (data.flag) {
+                                top.layer.alert("两次输入的密码是一样一样的！")
+                            }else{
+                                top.layer.alert("密码修改失败，请联系管理员！！")
+                            }
+                        }
+                    });
+
+                }else{
+                    top.layer.alert("两次输入的密码不一致！")
+                }
+            });
+        });
         // url=url.replace("{id}",infoId);
         // top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
     }
@@ -206,3 +226,9 @@ function alertDialog(title,url,infoid,gridId,tipMsg){
         });
     });
 }
+
+// //=======限制输入长度
+// $(function(){
+//     $("#rsqUserStatisticGridIdGridQuery input[name='name']").attr({maxlength:"7"});
+//     $("#rsqUserStatisticGridIdGridQuery input[name='email']").attr({maxlength:"7"});
+// });

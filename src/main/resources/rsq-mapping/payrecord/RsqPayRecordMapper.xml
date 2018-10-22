@@ -70,6 +70,7 @@
         po.pay_product_id = pp.id
     AND po.team_id = t.id
     AND td.team_id = t.id
+    AND po.status = TRUE
     <if test="teamName != null">
       AND INSTR(t.name, #{teamName}) > 0
     </if>

@@ -95,7 +95,8 @@
         a.phone_number,
         a.avatar,
         a.`name`,
-        u.username
+        u.username,
+        a.id AS accountId
         FROM
         account a,
         USER u
@@ -115,4 +116,8 @@
     <select id="getRsqPayProductByTeamVersionId" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
         SELECT * from pay_product WHERE team_version_id = #{teamVersionId}
     </select>
+
+    <update id="updateRsqPassword" parameterType="com.rishiqing.modules.common.entity.RsqUser" >
+        update account SET password = #{password} WHERE id = #{id}
+    </update>
 </mapper>

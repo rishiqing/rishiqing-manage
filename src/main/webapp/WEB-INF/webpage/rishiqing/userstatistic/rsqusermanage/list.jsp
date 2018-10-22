@@ -29,10 +29,10 @@
 
     <grid:toolbar title="账号激活" btnclass="btn-info" icon="fa-file-code-o" function="userActive" url="${adminPath}/userstatistic/rsqusermanage/{id}/userActive"  />
     <grid:toolbar title="账号注销" btnclass="btn-info" icon="fa-file-code-o" function="userFreeze" url="${adminPath}/userstatistic/rsqusermanage/{id}/userFreeze"  />
-    <grid:toolbar title="修改密码" btnclass="btn-info" icon="fa-file-code-o" function="updatePassword" url="${adminPath}/userstatistic/rsqusermanage/updatePassword"  />
+    <grid:toolbar title="修改密码" btnclass="btn-info" icon="fa-file-code-o" function="updatePassword" url="${adminPath}/common/rsqcommon/{id}/updatePassword"  />
     <grid:toolbar title="绑定账号" btnclass="btn-info" icon="fa-file-code-o" function="bindingAccount" url="${adminPath}/userstatistic/rsqusermanage/bindingAccount"  />
 </grid:grid>
-    <html:js  name="jquery,bootstrap,jquery-ui,peity,iCheck,sweetalert,Validform,jqgrid"/>
+    <html:js  name="jquery,bootstrap,jquery-ui,peity,iCheck,sweetalert,Validform,jqgrid,layer"/>
     <script src="${staticPath}/modules/rishiqing/rsq_diy.js"></script>
 </body>
 </html>

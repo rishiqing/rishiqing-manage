@@ -14,7 +14,7 @@ import java.util.Map; /**
  * @version V1.0
  *
  */
-public interface RsqCommonMapper{
+public interface RsqCommonMapper {
 
     /**
      * 获取当前用户在日事清系统中对应的信息
@@ -39,4 +39,9 @@ public interface RsqCommonMapper{
      * 获取产品信息，通过购买版本
      */
     RsqPayProduct getRsqPayProductByTeamVersionId(@Param("teamVersionId") Integer teamVersionId);
+
+    /**
+     * 更新日事清用户密码
+     */
+    int updateRsqPassword(RsqUser user);
 }

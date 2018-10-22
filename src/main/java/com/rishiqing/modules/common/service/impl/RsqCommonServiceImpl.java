@@ -4,10 +4,10 @@ import cn.jeeweb.modules.sys.security.shiro.realm.UserRealm;
 import cn.jeeweb.modules.sys.utils.PhoneFormatCheckUtils;
 import cn.jeeweb.modules.sys.utils.UserUtils;
 import com.rishiqing.core.constant.RsqSystemConstants;
+import com.rishiqing.core.util.SHAUtil;
 import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
-
 import com.rishiqing.modules.common.mapper.RsqCommonMapper;
 import com.rishiqing.modules.common.service.IRsqCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +90,23 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     @Override
     public RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId) {
         return rsqCommonMapper.getRsqPayProductByTeamVersionId(teamVersionId);
+    }
+
+    @Override
+    public Map updatePassword(String userId, String pwd) {
+        Map resMap = new HashMap();
+        resMap.put("flag", false);
+        List<RsqUser> resUserList = this.rsqCommonMapper.getUserInfoInRishiqingDBById(Integer.parseInt(userId));
+        if(resUserList == null || resUserList.size() == 0){
+            return resMap;
+        }
+        RsqUser user = resUserList.get(0);
+        //加密
+        String password = SHAUtil.SHA512(pwd);
+        user.setPassword(password);
+        this.rsqCommonMapper.updateRsqPassword(user);
+        resMap.put("flag", true);
+        return resMap;
     }
 }
 
