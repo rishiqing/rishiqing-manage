@@ -27,6 +27,14 @@ public interface RsqUserStatisticMapper extends BaseMapper<RsqUserStatistic> {
     List<RsqUserStatistic> ajaxList(Map map);
 
     /**
+     * 用户数据统计（带分页信息）
+     * @param map
+     * @return
+     */
+    List<RsqUserStatistic> ajaxListWithTeamId(Map map);
+
+
+    /**
      * 用户数据量统计
      */
     int rsqUserStatisticCount(Map map);

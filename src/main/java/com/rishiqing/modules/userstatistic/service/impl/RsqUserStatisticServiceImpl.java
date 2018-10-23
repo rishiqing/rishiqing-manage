@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**   
  * @Title: 日事清用户数据统计
@@ -91,7 +88,12 @@ public class RsqUserStatisticServiceImpl extends CommonServiceImpl<RsqUserStatis
         Map<String, Object> map = createConditionMap(request);
         map.put("offset", page.getOffset());
         map.put("limit", page.getLimit());
-        List<RsqUserStatistic> rsqUserStatisticList = this.baseMapper.ajaxList(map);
+        List<RsqUserStatistic> rsqUserStatisticList = new ArrayList<RsqUserStatistic>();
+        if(map.get("teamId") != null){
+            rsqUserStatisticList = this.baseMapper.ajaxListWithTeamId(map);
+        }else{
+            rsqUserStatisticList = this.baseMapper.ajaxList(map);
+        }
 
         //返回数据加工
         for(RsqUserStatistic temp : rsqUserStatisticList){

@@ -119,6 +119,55 @@
       </if>
   </select>
 
+    <!-- 用户信息统计 -->
+    <select id="ajaxListWithTeamId" resultMap="BaseResultMap">
+        SELECT
+        a.id,
+        a.`name` AS NAME,
+        a.email AS email,
+        a.phone_number AS phone,
+        ur.reg_date AS regist_date,
+        t.`name` AS teamName,
+        ts.user_limit AS teamNumber,
+        ur.client AS date_from,
+        ur.client AS date_channel,
+        t.id AS teamId,
+        u.id AS userId,
+        u.is_display as account_locked
+        FROM
+        account a,
+        user_register ur,
+        USER u
+        LEFT JOIN team t ON t.id = u.team_id
+        LEFT JOIN team_status ts ON ts.team_id = t.id
+        WHERE
+        u.account_id = a.id
+        AND ur.account_id = a.id
+        <if test="name != null and name != '' ">
+            AND INSTR(a.name, #{name}) > 0
+        </if>
+        <if test="email != null and email != '' ">
+            AND INSTR(a.email, #{email}) > 0
+        </if>
+        <if test="phone != null and phone != '' ">
+            AND INSTR(a.phone_number, #{phone}) > 0
+        </if>
+        <if test="registBeginDate != null">
+            AND ur.reg_date >=  #{registBeginDate}
+        </if>
+        <if test="registEndDate != null">
+            AND #{registEndDate} >= ur.reg_date
+        </if>
+        <if test="teamId != null and teamId != '' ">
+            AND u.team_id = #{teamId}
+        </if>
+        ORDER BY
+        ur.reg_date DESC
+        <if test="offset != null and limit != null ">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
     <select id="rsqUserStatisticCount" resultType="java.lang.Integer">
         SELECT
           count(1)
