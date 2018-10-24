@@ -122,6 +122,14 @@
 					<input type="hidden" name="payType" value="renewals">
 					<input name="teamNumber" type="hidden" value="0">
 					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">购买版本:</label>
+						<div class="col-sm-8">
+							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="buyTypeRadio" value="qy" >企业版
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">续费天数:</label>
 						<div class="col-sm-8">
 							<input id="a4" name="buyDay" class="form-control" type="number" min="0" value="0" step="1">
@@ -149,9 +157,17 @@
 					<input type="hidden" name="payType" value="add">
 					<input name="buyDay" type="hidden" value="0">
 					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">购买版本:</label>
+						<div class="col-sm-8">
+							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="buyTypeRadio" value="qy" >企业版
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">增加人数:</label>
 						<div class="col-sm-8">
-							<input id="a5" name="addTeamNumber" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a5" name="teamNumber" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">

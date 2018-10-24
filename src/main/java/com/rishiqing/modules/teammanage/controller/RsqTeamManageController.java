@@ -158,23 +158,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = new HashMap<>();
-        //获取团队id
-        String id = request.getParameter("teamId");
-        //获取版本信息
-        String buyVersion = request.getParameter("buyTypeRadio");
-        //获取购买人数
-        String buyNumbers = request.getParameter("teamNumber");
-        //获取购买天数
-        String buyDays = request.getParameter("buyDay");
-        //购买费用
-        String totalFee = request.getParameter("totalFee");
-
-        paramMap.put("id", id);
-        paramMap.put("buyVersion", buyVersion);
-        paramMap.put("buyNumbers", buyNumbers);
-        paramMap.put("buyDays", buyDays);
-        paramMap.put("totalFee", totalFee);
+        Map<String, String> paramMap = paramsDeal(request);
         try {
             rsqTeamManageService.rsqBuy(paramMap);
             resMap.put("success", "购买成功！");
@@ -209,14 +193,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = new HashMap<>();
-        //获取团队id
-        String id = request.getParameter("teamId");
-        //获取购买天数
-        String buyDays = request.getParameter("buyDay");
-
-        paramMap.put("id", id);
-        paramMap.put("buyDays", buyDays);
+        Map<String, String> paramMap = paramsDeal(request);
         try {
             rsqTeamManageService.rsqRenewal(paramMap);
             resMap.put("success", "续费成功！");
@@ -251,15 +228,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = new HashMap<>();
-
-        //获取团队id
-        String id = request.getParameter("teamId");
-        //获取购买人数
-        String buyNumbers = request.getParameter("teamNumber");
-
-        paramMap.put("id", id);
-        paramMap.put("buyNumbers", buyNumbers);
+        Map<String, String> paramMap = paramsDeal(request);
         try {
             rsqTeamManageService.rsqAdd(paramMap);
             resMap.put("success", "增加人数成功！");
@@ -295,15 +264,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = new HashMap<>();
-
-        //获取团队id
-        String id = request.getParameter("teamId");
-        //获取版本信息
-        String buyVersion = request.getParameter("buyTypeRadio");
-
-        paramMap.put("id", id);
-        paramMap.put("buyVersion", buyVersion);
+        Map<String, String> paramMap = paramsDeal(request);
         try {
             rsqTeamManageService.rsqUpdate(paramMap);
             resMap.put("success", "版本升级成功！");
