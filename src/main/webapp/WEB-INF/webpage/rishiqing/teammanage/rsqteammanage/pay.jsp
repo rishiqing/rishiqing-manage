@@ -15,6 +15,7 @@
 			<th>团队名称</th>
 			<th>创建者</th>
 			<th>当前成员数</th>
+			<th>团队信息</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -22,6 +23,7 @@
 			<td>${rsqTeamManage.teamName}</td>
 			<td>${rsqTeamManage.createManName} </td>
 			<td>${rsqTeamManage.teamMember}</td>
+			<td>${teamStatusMap.versionName}（${teamStatusMap.expired}）</td>
 		</tr>
 		</tbody>
 	</table>
@@ -121,14 +123,15 @@
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
 					<input type="hidden" name="payType" value="renewals">
 					<input name="teamNumber" type="hidden" value="0">
-					<div class="form-group col-sm-12">
+					<input name="buyTypeRadio" type="hidden" value="${teamStatusMap.buyTypeRadio}">
+<%--					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">购买版本:</label>
 						<div class="col-sm-8">
 							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="radio" name="buyTypeRadio" value="qy" >企业版
 						</div>
-					</div>
+					</div>--%>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">续费天数:</label>
 						<div class="col-sm-8">
@@ -156,14 +159,15 @@
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
 					<input type="hidden" name="payType" value="add">
 					<input name="buyDay" type="hidden" value="0">
-					<div class="form-group col-sm-12">
+					<input name="buyTypeRadio" type="hidden" value="${teamStatusMap.buyTypeRadio}">
+<%--					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">购买版本:</label>
 						<div class="col-sm-8">
 							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<input type="radio" name="buyTypeRadio" value="qy" >企业版
 						</div>
-					</div>
+					</div>--%>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">增加人数:</label>
 						<div class="col-sm-8">

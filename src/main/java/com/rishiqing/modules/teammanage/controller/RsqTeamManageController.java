@@ -14,6 +14,7 @@ import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +95,10 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
         String id = request.getParameter("id");
         //根据id获取团队信息
         RsqTeamManage rsqTeamManage = rsqTeamManageService.getRsqTeamManageById(id);
+        //获取团队的会员信息
+        Map<String, String> teamStatusMap = rsqTeamManageService.getTeamStaus(rsqTeamManage);
         model.addAttribute("rsqTeamManage", rsqTeamManage);
+        model.addAttribute("teamStatusMap", teamStatusMap);
         return display("pay");
     }
 
@@ -125,8 +129,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
         Map<String, String> paramMap = paramsDeal(request);
 
         try {
-            rsqTeamManageService.rsqTry(paramMap);
-            resMap.put("success", "开通试用成功！");
+            resMap = rsqTeamManageService.rsqTry(paramMap);
         } catch (Exception e) {
             e.printStackTrace();
             resMap.put("fail", "开通试用失败，请联系管理员进行查看!");
@@ -160,8 +163,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
 
         Map<String, String> paramMap = paramsDeal(request);
         try {
-            rsqTeamManageService.rsqBuy(paramMap);
-            resMap.put("success", "购买成功！");
+            resMap = rsqTeamManageService.rsqBuy(paramMap);
         } catch (Exception e) {
             e.printStackTrace();
             resMap.put("fail", "购买失败，请联系管理员进行查看!");
@@ -195,8 +197,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
 
         Map<String, String> paramMap = paramsDeal(request);
         try {
-            rsqTeamManageService.rsqRenewal(paramMap);
-            resMap.put("success", "续费成功！");
+            resMap = rsqTeamManageService.rsqRenewal(paramMap);
         } catch (Exception e) {
             e.printStackTrace();
             resMap.put("fail", "续费失败，请联系管理员进行查看!");
@@ -230,8 +231,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
 
         Map<String, String> paramMap = paramsDeal(request);
         try {
-            rsqTeamManageService.rsqAdd(paramMap);
-            resMap.put("success", "增加人数成功！");
+            resMap = rsqTeamManageService.rsqAdd(paramMap);
         } catch (Exception e) {
             e.printStackTrace();
             resMap.put("fail", "增加人数失败，请联系管理员进行查看!");
@@ -266,8 +266,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
 
         Map<String, String> paramMap = paramsDeal(request);
         try {
-            rsqTeamManageService.rsqUpdate(paramMap);
-            resMap.put("success", "版本升级成功！");
+            resMap = rsqTeamManageService.rsqUpdate(paramMap);
         } catch (Exception e) {
             e.printStackTrace();
             resMap.put("fail", "版本升级失败，请联系管理员进行查看!");

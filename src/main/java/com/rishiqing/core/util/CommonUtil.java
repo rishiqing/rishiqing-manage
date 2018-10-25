@@ -168,6 +168,9 @@ public class CommonUtil {
      */
     public static String getBodyForBase(Integer userLimit,Date overDate){
         try {
+            Date today = new Date();
+            today = delHHMMSS(today);
+            overDate = delHHMMSS(overDate);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
             StringBuffer sbf = new StringBuffer();
@@ -178,7 +181,7 @@ public class CommonUtil {
                 sbf.append(userLimit);
             }
             sbf.append("个成员，");
-            sbf.append(getSubDay(new Date(), overDate));
+            sbf.append(getSubDay(today, overDate));
             sbf.append("天，");
             sbf.append(sdf.format(overDate));
             sbf.append("到期");
@@ -203,7 +206,7 @@ public class CommonUtil {
                 sbf.append(userLimit);
             }
             sbf.append("个成员，");
-            sbf.append(getSubDay(new Date(), overDate));
+            sbf.append(getSubDay(CommonUtil.delHHMMSS(new Date()), overDate));
             sbf.append("天，");
             sbf.append(sdf.format(overDate));
             sbf.append("到期");

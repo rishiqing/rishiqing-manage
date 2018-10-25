@@ -28,34 +28,40 @@ public interface IRsqTeamManageService extends ICommonService<RsqTeamManage> {
     RsqTeamManage getRsqTeamManageById(String id);
 
     /**
+     * 获取团队的会员相关信息
+     */
+    Map<String, String> getTeamStaus(RsqTeamManage rsqTeamManage);
+
+
+    /**
      * 开通试用
      * @param paramMap
      */
-    void rsqTry(Map<String, String> paramMap);
+    Map<String, String> rsqTry(Map<String, String> paramMap);
 
     /**
      * 购买
      * @param paramMap
      */
-    void rsqBuy(Map<String, String> paramMap);
+    Map<String, String> rsqBuy(Map<String, String> paramMap);
 
     /**
      * 续费
      * @param paramMap
      */
-    void rsqRenewal(Map<String, String> paramMap);
+    Map<String, String> rsqRenewal(Map<String, String> paramMap);
 
     /**
      * 增加人数
      * @param paramMap
      */
-    void rsqAdd(Map<String, String> paramMap);
+    Map<String, String> rsqAdd(Map<String, String> paramMap);
 
     /**
      * 版本升级
      * @param paramMap
      */
-    void rsqUpdate(Map<String, String> paramMap);
+    Map<String, String> rsqUpdate(Map<String, String> paramMap);
 
     /**
      * 当前用户操作权限判断

@@ -12,6 +12,8 @@ public class RsqSystemConstants {
     public static final String TRIAL_PROFESSIONAL = "TRIAL_PROFESSIONAL";
     // 普通专业版
     public static final String BASE_PROFESSIONAL = "BASE_PROFESSIONAL";
+    // 普通专业版
+    public static final String BASE_PROFESSIONAL_NAME = "日事清专业版";
     // 专业永久版
     public static final String ADVANCED_PROFESSIONAL = "ADVANCED_PROFESSIONAL";
 
@@ -19,6 +21,8 @@ public class RsqSystemConstants {
     public static final String TRIAL_ENTERPRISE = "TRIAL_ENTERPRISE";
     // 普通企业版
     public static final String BASE_ENTERPRISE = "BASE_ENTERPRISE";
+    // 普通企业版
+    public static final String BASE_ENTERPRISE_NAME = "日事清企业版";
     // 企业永久版
     public static final String ADVANCED_ENTERPRISE = "ADVANCED_ENTERPRISE";
     // 免费版
