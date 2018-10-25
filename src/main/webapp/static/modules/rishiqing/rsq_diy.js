@@ -139,7 +139,7 @@ function updatePassword(title,url, gridId, infoId ,tipMsg, width,height){
                         cache : false,
                         success : function(data) {
                             if (data.flag) {
-                                top.layer.alert("两次输入的密码是一样一样的！")
+                                top.layer.alert("密码修改成功！")
                             }else{
                                 top.layer.alert("密码修改失败，请联系管理员！！")
                             }
