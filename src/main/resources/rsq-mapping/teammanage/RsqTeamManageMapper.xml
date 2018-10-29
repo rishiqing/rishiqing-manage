@@ -73,6 +73,9 @@
           <if test="createEndDate != null">
               AND #{createEndDate} >= t.date_created
           </if>
+          <if test="linkedPhone != null">
+              AND INSTR(td.phone_number, #{linkedPhone}) > 0
+          </if>
         ORDER BY
             t.date_created DESC
       <if test="offset != null and limit != null ">

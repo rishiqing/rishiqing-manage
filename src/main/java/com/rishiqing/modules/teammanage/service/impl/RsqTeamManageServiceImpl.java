@@ -61,7 +61,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     private Map<String, Object> getEffectiveParams(Map<String, Object> allMap){
         //定义有效参数范围
-        String[] paramsArr = new String[]{"teamName", "teamMember", "createDate"};
+        String[] paramsArr = new String[]{"teamName", "teamMember", "createDate", "linkedPhone"};
         //定义返回值
         Map<String, Object> resMap = new HashMap<>();
         for(String tempParam : paramsArr){

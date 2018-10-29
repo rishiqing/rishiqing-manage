@@ -17,7 +17,7 @@
     <grid:column label="名称"  name="teamName"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="创建者"  name="createManName" />
     <grid:column label="联系邮箱"  name="linkedEmail" />
-    <grid:column label="联系电话"  name="linkedPhone" />
+    <grid:column label="联系电话"  name="linkedPhone" query="true"  queryMode="input"  condition="like"/>
     <grid:column label="创建时间"  name="createDate"  query="true"  queryMode="date"  condition="between" />
     <grid:column label="成员数"  name="teamMember"  query="true"/>
 	<grid:toolbar function="search"/>
