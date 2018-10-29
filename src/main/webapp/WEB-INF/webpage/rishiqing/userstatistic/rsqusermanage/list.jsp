@@ -9,9 +9,9 @@
 <body title="日事清用户数据统计">
 <grid:grid id="rsqUserStatisticGridId" url="${adminPath}/userstatistic/rsqusermanage/ajaxList">
 	<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
-    <grid:column label="userId" hidden="true"   name="userId" width="100"/>
     <grid:column label="teamId" hidden="true"   name="teamId" width="100"/>
 
+    <grid:column label="用户id" name="userId" width="100" query="true"  queryMode="input"  condition="like"/>
     <grid:column label="姓名"  name="name"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="邮箱"  name="email"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="手机号"  name="phone"  query="true"  queryMode="input"  condition="like" />

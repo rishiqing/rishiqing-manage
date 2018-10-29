@@ -112,6 +112,9 @@
       <if test="teamId != null and teamId != '' ">
           AND u.team_id = #{teamId}
       </if>
+      <if test="userId != null and userId != '' ">
+          AND INSTR(u.id, #{userId}) > 0
+      </if>
     ORDER BY
         ur.reg_date DESC
       <if test="offset != null and limit != null ">

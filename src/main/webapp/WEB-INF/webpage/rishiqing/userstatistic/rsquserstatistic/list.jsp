@@ -9,13 +9,12 @@
 <body title="日事清用户数据统计">
 <grid:grid id="rsqUserStatisticGridId" url="${adminPath}/userstatistic/rsquserstatistic/ajaxList">
 	<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
-    <grid:column label="userId" hidden="true"   name="userId" width="100"/>
     <grid:column label="teamId" hidden="true"   name="teamId" width="100"/>
 
     <grid:column label="操作"  name="opt" formatter="button" width="140"/>
     <grid:button title="登录查看" groupname="opt" function="openUser"  outclass="btn-success" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
     <grid:button title="公司详情" groupname="opt" function="openCompany" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
-
+    <grid:column label="用户id" name="userId" width="100" query="true"  queryMode="input"  condition="like"/>
     <grid:column label="姓名"  name="name"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="邮箱"  name="email"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="手机号"  name="phone"  query="true"  queryMode="input"  condition="like" />
