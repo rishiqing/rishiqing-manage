@@ -113,7 +113,7 @@
           AND u.team_id = #{teamId}
       </if>
       <if test="userId != null and userId != '' ">
-          AND INSTR(u.id, #{userId}) > 0
+          AND u.id = #{userId}
       </if>
     ORDER BY
         ur.reg_date DESC
