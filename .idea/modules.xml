@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/jeeweb-mybatis.iml" filepath="$PROJECT_DIR$/.idea/jeeweb-mybatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jeeweb-mybatis.iml" filepath="$PROJECT_DIR$/jeeweb-mybatis.iml" />
     </modules>
   </component>
 </project>

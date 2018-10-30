@@ -64,7 +64,7 @@
           LEFT JOIN account a ON a.id = u.account_id
       WHERE
           tur.role = 'creator'
-          <if test="teamName != null">
+          <if test="teamName != null and teamName != '' ">
               AND INSTR(t.name, #{teamName}) > 0
           </if>
           <if test="createBeginDate != null">
@@ -73,7 +73,7 @@
           <if test="createEndDate != null">
               AND #{createEndDate} >= t.date_created
           </if>
-          <if test="linkedPhone != null">
+          <if test="linkedPhone != null and linkedPhone != '' ">
               AND INSTR(td.phone_number, #{linkedPhone}) > 0
           </if>
         ORDER BY
