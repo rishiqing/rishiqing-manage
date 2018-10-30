@@ -193,15 +193,13 @@
         SELECT
           count(*) as login_cnt,
           user_id,
-          login_date as last_login_date
+          max(login_date) as last_login_date
         FROM
           user_login
           WHERE
           user_id = #{0}
           GROUP BY
           user_id
-          ORDER BY
-          login_date DESC
     </select>
 
     <!-- 获取日事清系统后台数据统计信息 -->
