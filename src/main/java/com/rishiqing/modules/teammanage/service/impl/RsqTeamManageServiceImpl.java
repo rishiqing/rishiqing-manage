@@ -232,6 +232,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         addPayOrder(paramMap);
 
         logger.debug("====购买end");
+        resMap.put("success", "购买成功！");
         return resMap;
     }
 
