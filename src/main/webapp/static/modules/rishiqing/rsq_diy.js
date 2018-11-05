@@ -232,3 +232,9 @@ function alertDialog(title,url,infoid,gridId,tipMsg){
 //     $("#rsqUserStatisticGridIdGridQuery input[name='name']").attr({maxlength:"7"});
 //     $("#rsqUserStatisticGridIdGridQuery input[name='email']").attr({maxlength:"7"});
 // });
+
+//将表格下所有按钮改成普通文本形式
+window.onload = function(){
+    $("a").removeClass('btn btn-xs btn-warning');
+    $('.btn-primary').addClass('btn btn-xs');
+}
