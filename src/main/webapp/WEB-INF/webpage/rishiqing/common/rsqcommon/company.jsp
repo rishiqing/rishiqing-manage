@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/webpage/common/taglibs.jspf"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,10 +55,10 @@
 					<grid:column label="公司人数"  name="teamNumber" />
 					<grid:column label="数据来源"  name="dateFrom" />
 					<grid:column label="渠道"  name="dateChannel" />
-
-					<grid:column label="更多"  name="opt" formatter="button" width="70"/>
-					<grid:button title="更多" groupname="opt" function="openUser"  outclass="btn-warning" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
-
+					<shiro:hasAnyRoles name="admin">
+						<grid:column label="更多"  name="opt" formatter="button" width="70"/>
+						<grid:button title="更多" groupname="opt" function="openUser"  outclass="btn-warning" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
+					</shiro:hasAnyRoles>
 					<%--<grid:toolbar function="search"/>--%>
 					<%--<grid:toolbar function="reset"/>--%>
 				</grid:grid>

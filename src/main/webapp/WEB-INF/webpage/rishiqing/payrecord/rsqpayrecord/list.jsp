@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@include file="/WEB-INF/webpage/common/taglibs.jspf"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,9 @@
     <grid:column label="userId" hidden="true"   name="userId"/>
     <grid:column label="teamId" hidden="true"   name="teamId"/>
     <grid:column label="公司详情"  name="opt" formatter="button" width="60" />
-    <grid:button groupname="opt" function="openCompany" title="公司详情" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
+    <shiro:hasAnyRoles name="admin,manager,employee">
+        <grid:button groupname="opt" function="openCompany" title="公司详情" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
+    </shiro:hasAnyRoles>
     <grid:column label="充值时间"  name="payDate"  query="true"  queryMode="date"  condition="between" />
     <grid:column label="用户类型"  name="payType"  query="true"  queryMode="select"  condition="eq"  dict="payType"/>
     <grid:column label="充值类型"  name="plateform"  query="true"  queryMode="select"  condition="eq"  dict="plateform"/>
