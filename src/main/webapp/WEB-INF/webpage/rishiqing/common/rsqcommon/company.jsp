@@ -39,9 +39,7 @@
 					<grid:column label="sys.common.key" hidden="true"   name="id" width="100"/>
 					<grid:column label="userId" hidden="true"   name="userId" width="100"/>
 					<grid:column label="teamId" hidden="true"   name="teamId" width="100"/>
-					<grid:column label="操作"  name="opt" formatter="button" width="70"/>
-					<grid:button title="登录查看" groupname="opt" function="openUser"  outclass="btn-success" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
-<%--
+					<%--
 					<grid:button title="公司详情" groupname="opt" function="openCompany" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
 --%>
 
@@ -56,6 +54,10 @@
 					<grid:column label="公司人数"  name="teamNumber" />
 					<grid:column label="数据来源"  name="dateFrom" />
 					<grid:column label="渠道"  name="dateChannel" />
+
+					<grid:column label="更多"  name="opt" formatter="button" width="70"/>
+					<grid:button title="更多" groupname="opt" function="openUser"  outclass="btn-warning" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
+
 					<%--<grid:toolbar function="search"/>--%>
 					<%--<grid:toolbar function="reset"/>--%>
 				</grid:grid>
@@ -74,7 +76,7 @@
 	</div>
 </div>
 
-<html:js  name="jquery,bootstrap,jquery-ui,peity,iCheck,sweetalert,Validform,jqgrid"/>
+<html:js  name="jquery,bootstrap,jquery-ui,peity,iCheck,sweetalert,Validform,jqgrid,layer"/>
 <script src="${staticPath}/modules/rishiqing/rsq_diy.js"></script>
 </body>
 </html>
