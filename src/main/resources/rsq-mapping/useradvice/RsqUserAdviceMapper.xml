@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.rishiqing.modules.useradvice.mapper.RsqUserAdviceMapper" >
+
+  <resultMap id="BaseResultMap" type="com.rishiqing.modules.useradvice.entity.RsqUserAdvice" >
+      <!-- 意见id -->
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <!-- 创建日期 -->
+      <result column="create_date" property="dateCreated" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <!-- 评分 -->
+      <result column="star" property="star" jdbcType="VARCHAR" />
+      <!-- 渠道 -->
+      <result column="client" property="client" jdbcType="VARCHAR"/>
+      <!-- 意见 -->
+      <result column="remark" property="remark" jdbcType="VARCHAR"/>
+      <!-- 提意见的人 -->
+      <result column="username" property="username" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="ajaxList" resultMap="BaseResultMap">
+        SELECT
+          ua.id as id,
+          ua.client as client,
+          ua.remark AS remark,
+          ua.star AS star,
+          a.`name` AS username
+        FROM
+            user_advice ua
+        LEFT JOIN `user` u ON u.id = ua.user_id
+        LEFT JOIN account a ON a.id = u.account_id
+        WHERE
+          1 = 1
+          <if test="username != null and username != '' ">
+              AND INSTR(a.name, #{username}) > 0
+          </if>
+          <if test="createBeginDate != null">
+              AND ua.date_created >= #{createBeginDate}
+          </if>
+          <if test="createEndDate != null">
+              AND #{createEndDate} >= ua.date_created
+          </if>
+          <if test="star != null and star != '' ">
+              AND ua.star = #{star}
+          </if>
+          <if test="client != null and client != '' ">
+              AND ua.client = #{client}
+          </if>
+          ORDER BY
+          ua.date_created DESC
+          <if test="offset != null and limit != null ">
+              limit #{offset}, #{limit}
+          </if>
+  </select>
+
+    <!-- 统计数量 -->
+    <select id="rsqUserAdviceCount" resultType="java.lang.Integer">
+        SELECT
+          count(1)
+        FROM
+        user_advice ua
+        LEFT JOIN `user` u ON u.id = ua.user_id
+        LEFT JOIN account a ON a.id = u.account_id
+        WHERE
+        1 = 1
+        <if test="username != null and username != '' ">
+            AND INSTR(a.name, #{username}) > 0
+        </if>
+        <if test="createBeginDate != null">
+            AND ua.date_created >= #{createBeginDate}
+        </if>
+        <if test="createEndDate != null">
+            AND #{createEndDate} >= ua.date_created
+        </if>
+        <if test="star != null and star != '' ">
+            AND ua.star = #{star}
+        </if>
+        <if test="client != null and client != '' ">
+            AND ua.client = #{client}
+        </if>
+    </select>
+
+</mapper>
