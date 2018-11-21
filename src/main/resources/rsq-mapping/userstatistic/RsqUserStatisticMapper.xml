@@ -87,7 +87,7 @@
         u.is_display as account_locked
     FROM
         account a,
-        user_register ur force INDEX(index_regdate_account),
+        user_register ur,
         USER u
         LEFT JOIN team t ON t.id = u.team_id
         LEFT JOIN team_status ts ON ts.team_id = t.id
@@ -95,13 +95,13 @@
         u.account_id = a.id
     AND ur.account_id = a.id
       <if test="name != null and name != '' ">
-          AND INSTR(a.name, #{name}) > 0
+          AND a.name like CONCAT(#{name},'%')
       </if>
       <if test="email != null and email != '' ">
-          AND INSTR(a.email, #{email}) > 0
+          AND a.email like  CONCAT(#{email},'%')
       </if>
       <if test="phone != null and phone != '' ">
-          AND INSTR(a.phone_number, #{phone}) > 0
+          AND a.phone_number like  CONCAT(#{phone},'%')
       </if>
       <if test="registBeginDate != null">
           AND ur.reg_date >=  #{registBeginDate}
@@ -147,13 +147,13 @@
         u.account_id = a.id
         AND ur.account_id = a.id
         <if test="name != null and name != '' ">
-            AND INSTR(a.name, #{name}) > 0
+            AND a.name like CONCAT(#{name},'%')
         </if>
         <if test="email != null and email != '' ">
-            AND INSTR(a.email, #{email}) > 0
+            AND a.email like CONCAT(#{email},'%')
         </if>
         <if test="phone != null and phone != '' ">
-            AND INSTR(a.phone_number, #{phone}) > 0
+            AND a.phone_number like CONCAT(#{phone},'%')
         </if>
         <if test="registBeginDate != null">
             AND ur.reg_date >=  #{registBeginDate}
@@ -179,13 +179,13 @@
         WHERE
           1=1
         <if test="name != null and name != '' ">
-            AND INSTR(a.name, #{name}) > 0
+            AND a.name like CONCAT(#{name},'%')
         </if>
         <if test="email != null and email != '' ">
-            AND INSTR(a.email, #{email}) > 0
+            AND a.email like CONCAT(#{email},'%')
         </if>
         <if test="phone != null and phone != '' ">
-            AND INSTR(a.phone_number, #{phone}) > 0
+            AND a.phone_number like CONCAT(#{phone},'%')
         </if>
     </select>
 
@@ -198,8 +198,8 @@
           user_login
           WHERE
           user_id = #{0}
-          GROUP BY
-          user_id
+--           GROUP BY
+--           user_id
     </select>
 
     <!-- 获取日事清系统后台数据统计信息 -->
