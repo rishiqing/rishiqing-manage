@@ -72,10 +72,10 @@
     AND td.team_id = t.id
     AND po.status = TRUE
     <if test="teamName != null">
-      AND INSTR(t.name, #{teamName}) > 0
+      AND t.name like CONCAT(#{teamName},'%')
     </if>
     <if test="contacts != null">
-      AND INSTR(td.contacts, #{contacts}) > 0
+      AND td.contacts like CONCAT(#{contacts},'%')
     </if>
     <if test="payBeginDate != null">
       AND po.date_created >= #{payBeginDate}

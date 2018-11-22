@@ -57,15 +57,15 @@
           t.id as teamId,
           u.id as userId
       FROM
-          team t FORCE INDEX (index_date_id)
+          team t
           LEFT JOIN team_data td ON t.id = td.team_id
-          LEFT JOIN team_user_role tur ON tur.team_id = t.id
+          LEFT JOIN team_user_role tur ON tur.team_id = t.id and tur.role = 'creator'
           LEFT JOIN USER u ON u.id = tur.user_id
           LEFT JOIN account a ON a.id = u.account_id
       WHERE
-          tur.role = 'creator'
+          1 = 1
           <if test="teamName != null and teamName != '' ">
-              AND INSTR(t.name, #{teamName}) > 0
+              AND t.name like CONCAT(#{teamName},'%')
           </if>
           <if test="createBeginDate != null">
               AND t.date_created >= #{createBeginDate}
@@ -74,7 +74,7 @@
               AND #{createEndDate} >= t.date_created
           </if>
           <if test="linkedPhone != null and linkedPhone != '' ">
-              AND INSTR(td.phone_number, #{linkedPhone}) > 0
+              AND td.phone_number like CONCAT(#{linkedPhone},'%')
           </if>
         ORDER BY
             t.date_created DESC
@@ -92,7 +92,7 @@
         WHERE
           1 = 1
         <if test="teamName != null">
-            AND INSTR(t.name, #{teamName}) > 0
+            AND t.name like CONCAT(#{teamName},'%')
         </if>
         <if test="createBeginDate != null">
             AND t.date_created >= #{createBeginDate}
