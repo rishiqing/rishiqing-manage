@@ -21,7 +21,7 @@ public interface RsqCommonMapper {
      * @param queryMap
      * @return
      */
-    RsqUser getUserInfoInRishiqingDB(@Param("params")Map<String, String> queryMap);
+    RsqUser getUserInfoInRishiqingDB(@Param("params")Map<String, Object> queryMap);
 
     /**
      * 通过用户id获取用户信息

@@ -47,18 +47,16 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
         //获取当前用户信息
         UserRealm.Principal principal = UserUtils.getPrincipal();
         String username = principal.getUsername();
+        String phone = principal.getPhone();
         //如果用户名是邮箱格式，按邮箱查询，否则按手机号查
-        Map<String, String> queryMap = new HashMap<>();
-        if(username.contains("@")){
-            queryMap.put("email", username);
-        }else{
-            if(PhoneFormatCheckUtils.isChinaPhoneLegal(username)){
-                queryMap.put("phone", username);
-            }else{
-                return null;
-            }
+        Map<String, Object> queryMap = new HashMap<>();
+        if(phone!= null && phone.isEmpty()) {
+            queryMap.put("phone" , phone);
+        } else {
+            queryMap.put("email" , username);
         }
-        queryMap.put("teamName", RsqSystemConstants.companyName);
+        // 装入 teamId
+        queryMap.put("teamId", RsqSystemConstants.RISHIQING_TEAM_ID);
         return rsqCommonMapper.getUserInfoInRishiqingDB(queryMap);
     }
 

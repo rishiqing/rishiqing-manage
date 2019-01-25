@@ -115,12 +115,14 @@ public class UserRealm extends AuthorizingRealm {
 		private String id; // 编号
 		private String username; // 登录名
 		private String realname; // 姓名
+		private String phone; // 手机号
 		private boolean mobileLogin; // 是否手机登录
 
 		public Principal(User user, boolean mobileLogin) {
 			this.id = user.getId();
 			this.username = user.getUsername();
 			this.realname = user.getRealname();
+			this.phone = user.getPhone();
 			this.mobileLogin = mobileLogin;
 		}
 
@@ -134,6 +136,10 @@ public class UserRealm extends AuthorizingRealm {
 
 		public String getRealname() {
 			return realname;
+		}
+
+		public String getPhone () {
+			return phone;
 		}
 
 		public boolean isMobileLogin() {
