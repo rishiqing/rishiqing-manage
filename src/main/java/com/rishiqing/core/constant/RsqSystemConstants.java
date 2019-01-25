@@ -6,7 +6,9 @@ package com.rishiqing.core.constant;
 public class RsqSystemConstants {
 
     //默认能进行操作的公司名（在日事清数据库中）
-    public static String companyName = "北京创仕科锐信息技术有限公司";
+//    public static String companyName = "北京创仕科锐信息技术有限公司";
+
+    public static Long RISHIQING_TEAM_ID = (long) 61;
 
     // 试用专业版
     public static final String TRIAL_PROFESSIONAL = "TRIAL_PROFESSIONAL";

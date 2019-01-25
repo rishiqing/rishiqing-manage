@@ -93,7 +93,7 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">人数:</label>
 						<div class="col-sm-8">
-							<input id="a2" name="teamNumber" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a2" name="teamNumber" class="form-control" type="number" min="-1" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">

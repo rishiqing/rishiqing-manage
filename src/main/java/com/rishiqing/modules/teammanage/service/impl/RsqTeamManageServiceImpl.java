@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -503,59 +504,73 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      * @param paramMap
      */
     private RsqTeamStatus addTeamStatus(Map<String, String> paramMap){
-        Date date = new Date();
-        date = CommonUtil.delHHMMSS(date);
+        try {
+            Date gameOver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2100-01-01 00:00:00");
+            Date date = new Date();
+            date = CommonUtil.delHHMMSS(date);
 
-        RsqTeamStatus rsqTeamStatus = new RsqTeamStatus();
-        //1、固定值0
-        rsqTeamStatus.setVersion(0);
+            RsqTeamStatus rsqTeamStatus = new RsqTeamStatus();
+            //1、固定值0
+            rsqTeamStatus.setVersion(0);
 
-        //2、会员版本
-        String version = paramMap.get("buyVersion");
-        if("zy".equals(version)){
-            Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
-            rsqTeamStatus.setTeamVersionId(zyId);
-            paramMap.put("teamVersionId", zyId + "");
-        }else if("qy".equals(version)){
-            Integer qyId = rsqCommonService.getBaseEnterpriseVersionId();
-            rsqTeamStatus.setTeamVersionId(qyId);
-            paramMap.put("teamVersionId", qyId + "");
-        }else{
-            Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
-            rsqTeamStatus.setTeamVersionId(zyId);
-            paramMap.put("teamVersionId", zyId + "");
+            //2、会员版本
+            String version = paramMap.get("buyVersion");
+            if("zy".equals(version)){
+                Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
+                rsqTeamStatus.setTeamVersionId(zyId);
+                paramMap.put("teamVersionId", zyId + "");
+            }else if("qy".equals(version)){
+                Integer qyId = rsqCommonService.getBaseEnterpriseVersionId();
+                rsqTeamStatus.setTeamVersionId(qyId);
+                paramMap.put("teamVersionId", qyId + "");
+            }else{
+                Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
+                rsqTeamStatus.setTeamVersionId(zyId);
+                paramMap.put("teamVersionId", zyId + "");
+            }
+
+            //3、是否过期,新创建的默认都是未过期的
+            rsqTeamStatus.setExpired(false);
+
+            //4、创建时间
+            rsqTeamStatus.setDateCreated(date);
+
+            //5、更新时间
+            rsqTeamStatus.setLastUpdated(date);
+
+            //6、人数
+            String addMember = paramMap.get("buyNumbers");
+            if(addMember != null && !"".equals(addMember)){
+                rsqTeamStatus.setUserLimit(Integer.parseInt(addMember));
+            }else{
+                rsqTeamStatus.setUserLimit(0);
+            }
+
+            //7、公司
+            rsqTeamStatus.setTeamId(Integer.parseInt(paramMap.get("id")));
+
+            //8、到期时间
+            String addDay = paramMap.get("buyDays");
+            if(addDay != null && !"".equals(addDay)){
+                Date res = CommonUtil.addDays(date, Integer.parseInt(addDay));
+                if(res.getTime() > gameOver.getTime()) {
+                    res = gameOver;
+                }
+                rsqTeamStatus.setDeadLine(res);
+            }else{
+                Date res = CommonUtil.addDays(date, 1);
+                if(res.getTime() > gameOver.getTime()) {
+                    res = gameOver;
+                }
+                rsqTeamStatus.setDeadLine(res);
+            }
+
+            addTeamStatus(rsqTeamStatus);
+            return rsqTeamStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        //3、是否过期,新创建的默认都是未过期的
-        rsqTeamStatus.setExpired(false);
-
-        //4、创建时间
-        rsqTeamStatus.setDateCreated(date);
-
-        //5、更新时间
-        rsqTeamStatus.setLastUpdated(date);
-
-        //6、人数
-        String addMember = paramMap.get("buyNumbers");
-        if(addMember != null && !"".equals(addMember)){
-            rsqTeamStatus.setUserLimit(Integer.parseInt(addMember));
-        }else{
-            rsqTeamStatus.setUserLimit(0);
-        }
-
-        //7、公司
-        rsqTeamStatus.setTeamId(Integer.parseInt(paramMap.get("id")));
-
-        //8、到期时间
-        String addDay = paramMap.get("buyDays");
-        if(addDay != null && !"".equals(addDay)){
-            rsqTeamStatus.setDeadLine(CommonUtil.addDays(date, Integer.parseInt(addDay)));
-        }else{
-            rsqTeamStatus.setDeadLine(CommonUtil.addDays(date, 1));
-        }
-
-        addTeamStatus(rsqTeamStatus);
-        return rsqTeamStatus;
+        return null;
     }
 
     /**

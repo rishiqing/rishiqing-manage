@@ -105,6 +105,7 @@ public class CommonUtil {
     /**
      * 基本版订单 body
      */
+    @Deprecated
     public static String getBodyForBase(Integer userLimit,Integer days){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -135,6 +136,7 @@ public class CommonUtil {
     /**
      * 试用版订单 body
      */
+    @Deprecated
     public static String getBodyForTrial(Integer userLimit,Integer days){
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -168,23 +170,32 @@ public class CommonUtil {
      */
     public static String getBodyForBase(Integer userLimit,Date overDate){
         try {
+            Date gameOver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2100-01-01 00:00:00");
+            if(overDate.getTime() > gameOver.getTime()) {
+                overDate = gameOver;
+            }
             Date today = new Date();
             today = delHHMMSS(today);
             overDate = delHHMMSS(overDate);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 
             StringBuffer sbf = new StringBuffer();
-            sbf.append("购买后可容纳");
+            sbf.append("购买后可容纳 ");
             if(userLimit == -1){
                 sbf.append("无限");
             }else{
                 sbf.append(userLimit);
             }
-            sbf.append("个成员，");
-            sbf.append(getSubDay(today, overDate));
-            sbf.append("天，");
-            sbf.append(sdf.format(overDate));
-            sbf.append("到期");
+            sbf.append(" 个成员，");
+            if(overDate.getTime() == gameOver.getTime()) {
+                sbf.append("无限期");
+            } else {
+                sbf.append(getSubDay(today, overDate));
+                sbf.append(" 天，");
+                sbf.append(sdf.format(overDate));
+                sbf.append(" 到期");
+            }
+
             return sbf.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,19 +208,27 @@ public class CommonUtil {
      */
     public static String getBodyForTrial(Integer userLimit,Date overDate){
         try {
+            Date gameOver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2100-01-01 00:00:00");
+            if(overDate.getTime() > gameOver.getTime()) {
+                overDate = gameOver;
+            }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
                         StringBuffer sbf = new StringBuffer();
-            sbf.append("试用版可容纳");
+            sbf.append("试用版可容纳 ");
             if(userLimit == -1){
                 sbf.append("无限");
             }else{
                 sbf.append(userLimit);
             }
-            sbf.append("个成员，");
-            sbf.append(getSubDay(CommonUtil.delHHMMSS(new Date()), overDate));
-            sbf.append("天，");
-            sbf.append(sdf.format(overDate));
-            sbf.append("到期");
+            sbf.append(" 个成员，");
+            if(overDate.getTime() == gameOver.getTime()) {
+                sbf.append("无限期");
+            } else {
+                sbf.append(getSubDay(CommonUtil.delHHMMSS(new Date()), overDate));
+                sbf.append(" 天，");
+                sbf.append(sdf.format(overDate));
+                sbf.append(" 到期");
+            }
             return sbf.toString();
         } catch (Exception e) {
             e.printStackTrace();
