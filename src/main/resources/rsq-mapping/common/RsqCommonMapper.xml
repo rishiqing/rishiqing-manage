@@ -70,12 +70,14 @@
         WHERE
         t.id = #{params.teamId}
         AND t.is_display = 1
+        AND (
         <if test="params.email != null">
-            AND a.email = #{params.email}
+            a.email = #{params.email}
         </if>
         <if test="params.phone != null">
-            AND a.phone_number = #{params.phone}
+            or a.phone_number = #{params.phone}
         </if>
+        )
         LIMIT 0,
         1;
     </select>
