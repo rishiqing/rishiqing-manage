@@ -23,7 +23,8 @@
           ua.client as client,
           ua.remark AS remark,
           ua.star AS star,
-          a.`name` AS username
+          a.`name` AS username,
+          ua.date_created as dateCreated
         FROM
             user_advice ua
         LEFT JOIN `user` u ON u.id = ua.user_id
