@@ -10,6 +10,7 @@ import com.rishiqing.core.util.CommonUtil;
 import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqUser;
 import com.rishiqing.modules.common.service.IRsqCommonService;
+import com.rishiqing.modules.teammanage.entity.RsqPayOperator;
 import com.rishiqing.modules.teammanage.entity.RsqPayOrder;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
@@ -192,6 +193,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         paramMap.put("payType", "pay");
         //添加充值记录
         addPayOrder(paramMap);
+        // 添加充值人员操作记录
+        addPayOperator(paramMap);
         logger.debug("====开通试用end");
         resMap.put("success", "开通适用成功！");
         return resMap;
@@ -231,7 +234,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         paramMap.put("payType", "pay");
         //添加充值记录
         addPayOrder(paramMap);
-
+        // 添加充值人员操作记录
+        addPayOperator(paramMap);
         logger.debug("====购买end");
         resMap.put("success", "购买成功！");
         return resMap;
@@ -272,6 +276,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
         addPayOrder(paramMap);
+        // 添加充值人员操作记录
+        addPayOperator(paramMap);
         logger.debug("====续费end");
         resMap.put("success", "续费成功!");
         return resMap;
@@ -311,7 +317,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
         addPayOrder(paramMap);
-
+        // 添加充值人员操作记录
+        addPayOperator(paramMap);
         logger.debug("====增加成员end");
 
         resMap.put("success", "添加成员成功！");
@@ -352,7 +359,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
         addPayOrder(paramMap);
-
+        // 添加充值人员操作记录
+        addPayOperator(paramMap);
         logger.debug("====版本更新end");
 
         resMap.put("success", "版本升级成功！");
@@ -486,8 +494,35 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
 
         /** outTradeNo订单号*/
         rsqPayOrder.setOutTradeNo(outTradeNo);
+        paramMap.put("outTradeNo",outTradeNo);
 
+        // 添加订单
         addPayOrder(rsqPayOrder);
+    }
+
+    /**
+     * 添加充值操作人员记录
+     * @param paramMap 参数列
+     * @return void
+     * @author codingR
+     * @date 2019/4/17 15:02
+     */
+    private void addPayOperator(Map<String, String> paramMap){
+        logger.debug("==== 添加操作人员记录 ===");
+        // 创建操作记录对象
+        RsqPayOperator operator = new RsqPayOperator();
+
+        // 设置名字
+        operator.setName(paramMap.get("operator"));
+
+        // 设置订单号
+        operator.setOutTradeNo(paramMap.get("outTradeNo"));
+
+        // 设置用户 id
+        operator.setManageId(paramMap.get("manageId"));
+
+        addPayOperator(operator);
+
     }
 
     /**
@@ -497,6 +532,17 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
     private void addPayOrder(RsqPayOrder rsqPayOrder){
         //插入数据库
         this.baseMapper.addPayOrder(rsqPayOrder);
+    }
+
+    /**
+     * 添加充值操作人员记录
+     * @param rsqPayOperator 操作人员记录
+     * @return void
+     * @author codingR
+     * @date 2019/4/17 15:02
+     */
+    private void addPayOperator(RsqPayOperator rsqPayOperator) {
+        this.baseMapper.addPayOperator(rsqPayOperator);
     }
 
     /**

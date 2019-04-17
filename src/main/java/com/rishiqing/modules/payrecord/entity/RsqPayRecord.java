@@ -72,6 +72,9 @@ public class RsqPayRecord extends AbstractEntity<String> {
     /** 充值记录描述 */
     @TableField(value = "desc")
 	private String desc;
+	/** 充值操作人员记录 */
+    @TableField(value ="operator")
+    private String operator;
 
 	public String getDesc() {
 		return desc;
@@ -342,5 +345,15 @@ public class RsqPayRecord extends AbstractEntity<String> {
 	public void setDays(String days){
 		this.days = days;
 	}
-	
+
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+
 }

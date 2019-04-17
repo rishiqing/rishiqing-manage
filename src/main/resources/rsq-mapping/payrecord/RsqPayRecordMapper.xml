@@ -25,8 +25,10 @@
     <result column="description" property="desc" jdbcType="VARCHAR" />
     <!-- 用户id -->
     <result column="userId" property="userId" jdbcType="INTEGER"/>
-    <!-- 用户id -->
+    <!-- 公司 id -->
     <result column="teamId" property="teamId" jdbcType="INTEGER"/>
+      <!--  -->
+      <result column="operator" property="operator" jdbcType="VARCHAR"></result>
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -60,17 +62,16 @@
       td.phone_number as linked_phone,
       po.days as days,
       po.body as description,
-      t.id as teamId
+      t.id as teamId,
+      o.name as operator
     FROM
-        pay_order po,
-        pay_product pp,
-        team t,
-        team_data td
+        pay_order po
+        inner join pay_product pp on pp.id = po.pay_product_id
+        inner join team t on po.team_id  = t.id
+        inner join team_data td on td.team_id = t.id
+        left join pay_operator o on o.out_trade_no = po.out_trade_no
     WHERE
-        po.pay_product_id = pp.id
-    AND po.team_id = t.id
-    AND td.team_id = t.id
-    AND po.status = TRUE
+    po.status = TRUE
     <if test="teamName != null">
       AND t.name like CONCAT(#{teamName},'%')
     </if>

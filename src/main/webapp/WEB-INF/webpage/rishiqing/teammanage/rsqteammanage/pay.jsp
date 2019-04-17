@@ -68,6 +68,12 @@
 							<input id="b1" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c1" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit" >确定</button>
@@ -108,6 +114,12 @@
 							<input id="b2" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c2" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit">确定</button>
@@ -142,6 +154,12 @@
 						<label class="col-sm-4 control-label">费用:</label>
 						<div class="col-sm-8">
 							<input id="b3" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c3" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
 						</div>
 					</div>
 					<div class="form-group">
@@ -180,6 +198,12 @@
 							<input id="b4" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c4" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+						</div>
+					</div>
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit">确定</button>
@@ -201,6 +225,12 @@
 						<label class="col-sm-4 control-label">费用:</label>
 						<div class="col-sm-8">
 							<input id="b5" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c5" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
 						</div>
 					</div>
 					<div class="form-group">

@@ -12,6 +12,8 @@ import cn.jeeweb.core.query.wrapper.EntityWrapper;
 import cn.jeeweb.core.security.shiro.authz.annotation.RequiresMethodPermissions;
 import cn.jeeweb.core.utils.ObjectUtils;
 import cn.jeeweb.core.utils.StringUtils;
+import cn.jeeweb.modules.sys.entity.User;
+import cn.jeeweb.modules.sys.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
@@ -297,6 +299,12 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
         //购买费用
         String totalFee = request.getParameter("totalFee");
         paramMap.put("totalFee", totalFee);
+        // 操作人员姓名记录
+        String operator = request.getParameter("operator");
+        paramMap.put("operator", operator);
+        // 获取系统用户id
+        User user = UserUtils.getUser();
+        paramMap.put("manageId", user.getId());
         return paramMap;
     }
 }
