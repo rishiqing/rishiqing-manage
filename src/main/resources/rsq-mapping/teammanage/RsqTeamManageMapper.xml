@@ -237,4 +237,17 @@
         )
     </insert>
 
+    <!-- 添加充值操作用户 -->
+    <insert id="addPayOperator" parameterType="com.rishiqing.modules.teammanage.entity.RsqPayOperator">
+        insert into pay_operator(
+            `name`,
+            `out_trade_no`,
+            `manage_id`
+        ) values (
+            #{name},
+            #{outTradeNo},
+            #{manageId}
+        )
+    </insert>
+
 </mapper>

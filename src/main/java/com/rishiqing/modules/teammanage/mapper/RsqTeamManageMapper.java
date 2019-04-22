@@ -1,6 +1,7 @@
 package com.rishiqing.modules.teammanage.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.rishiqing.modules.teammanage.entity.RsqPayOperator;
 import com.rishiqing.modules.teammanage.entity.RsqPayOrder;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
@@ -55,4 +56,10 @@ public interface RsqTeamManageMapper extends BaseMapper<RsqTeamManage> {
      * @param rsqPayOrder
      */
     void addPayOrder(RsqPayOrder rsqPayOrder);
+
+    /**
+     * 添加充值操作用户
+     * @param rsqPayOperator
+     */
+    void addPayOperator(RsqPayOperator rsqPayOperator);
 }

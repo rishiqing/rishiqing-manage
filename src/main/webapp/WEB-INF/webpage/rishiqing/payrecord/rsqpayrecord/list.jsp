@@ -23,8 +23,8 @@
     <grid:column label="团队/个人名称"  name="teamName"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="联系人/用户名"  name="contacts"  query="true"  queryMode="input"  condition="like" />
     <grid:column label="电话"  name="linkedPhone" />
-    <%--<grid:column label="当前充值后到期时间"  name="deadline" />--%>
     <grid:column label="充值记录" name="desc" width="250"/>
+    <grid:column label="操作人员" name="operator" width="100"/>
 
 	<grid:toolbar function="search"/>
 	<grid:toolbar function="reset"/>
