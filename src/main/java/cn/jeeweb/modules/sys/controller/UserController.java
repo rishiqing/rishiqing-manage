@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.rishiqing.modules.common.entity.RsqUser;
+import com.rishiqing.modules.common.service.IRsqCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,6 +64,8 @@ public class UserController extends BaseCRUDController<User, String> {
 	private IOrganizationService organizationService;
 	@Autowired
 	private IUserOrganizationService userOrganizationService;
+	@Autowired
+	private IRsqCommonService rsqCommonService;
 
 	public UserController() {
 		setCommonService(userService);
@@ -151,6 +156,13 @@ public class UserController extends BaseCRUDController<User, String> {
 			}
 			request.setAttribute("organizationIds", organizationIds);
 			request.setAttribute("organizationNames", organizationNames);
+
+			String rsqUsername = user.getRsqUsername();
+			if (rsqUsername != null && !"".equals(rsqUsername)) {
+				RsqUser rsqUser = rsqCommonService.getUserInfoInRishiqingDBByUsername(rsqUsername);
+				request.setAttribute("rsqAccountName", rsqUser.getName());
+			}
+
 		}
 	}
 
@@ -165,8 +177,13 @@ public class UserController extends BaseCRUDController<User, String> {
 	}
 
 	@Override
-	public void preSave(User entity, HttpServletRequest request, HttpServletResponse response) {
-
+	public void preSave(User entity, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 验证新兵营 username 合法性
+		String rsqUsername = entity.getRsqUsername();
+		RsqUser rsqUser = rsqCommonService.getUserInfoInRishiqingDBByUsername(rsqUsername);
+		if (rsqUser == null){
+			throw new Exception("未找到新兵营账户");
+		}
 	}
 
 	@Override

@@ -73,7 +73,15 @@
 				   <form:treeselect title="请选择组织机构" path="organizationIds"  nested="false"  dataUrl="${adminPath}/sys/organization/treeData" labelName="parentname" labelValue="${organizationNames}" multiselect="true" />	   
 				</td>
 		      </tr>
-		     
+               <tr>
+                   <td  class="width-15 active text-right">
+                       <label><font color="red">*</font>新兵营用户 ID: </label>
+                   </td>
+                   <td colspan="3">
+                       <form:input path="rsqUsername" class="form-control " datatype="*" nullmsg="请键入 ID" validErrorMsg="ID 异常，请重新键入" htmlEscape="false" />
+                       <label class="Validform_checktip"></label>
+                   </td>
+               </tr>
 		   </tbody>
 		   </table>   
 	</form:form>

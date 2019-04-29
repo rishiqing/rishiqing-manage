@@ -44,4 +44,15 @@ public interface RsqCommonMapper {
      * 更新日事清用户密码
      */
     int updateRsqPassword(RsqUser user);
+
+    /**
+     * 获取日事清新兵营的账户
+     */
+    List<RsqUser> listUserInfoInRishiqingDB(@Param("params") Map<String,Object> queryMap);
+
+    /**
+     * 通过用户名获取日事清用户
+     */
+    RsqUser getUserInfoInRishiqingDBByUsername(@Param("params") Map<String,Object> queryMap);
+
 }

@@ -4,6 +4,7 @@ import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +34,19 @@ public interface IRsqCommonService {
      * @return
      */
     RsqUser getUserInfoInRishiqingDBById(Integer userId);
+
+    /**
+     * 获取当前用户对应的日事清用户列表
+     * @return
+     */
+    List<RsqUser> listUserInfoInRishiqingDB ();
+
+    /**
+     * 通过用户名获取日事清用户信息
+     * @param username
+     * @return
+     */
+    RsqUser getUserInfoInRishiqingDBByUsername(String username);
 
     /**
      * 获取专业版id

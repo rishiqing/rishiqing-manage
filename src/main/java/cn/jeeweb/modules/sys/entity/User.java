@@ -43,6 +43,9 @@ public class User extends DataEntity<String> {
 	private String email;
 	// 联系电话
 	private String phone;
+	// 日事清新兵营(内部系统) user 的 username
+	private String rsqUsername;
+
 
 	/**
 	 * 系统用户的状态
@@ -167,6 +170,14 @@ public class User extends DataEntity<String> {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getRsqUsername() {
+		return rsqUsername;
+	}
+
+	public void setRsqUsername(String rsqUsername) {
+		this.rsqUsername = rsqUsername;
 	}
 
 }

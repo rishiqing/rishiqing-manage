@@ -25,6 +25,8 @@
         <id column="name" property="name" jdbcType="VARCHAR" />
         <!-- username -->
         <id column="username" property="username" jdbcType="VARCHAR" />
+        <!-- accountId -->
+        <id column="account_id" property="accountId" jdbcType="BIGINT" />
     </resultMap>
 
     <!-- team版本信息map -->
@@ -60,7 +62,7 @@
         u.position,
         u.team_id,
         u.username,
-        u.name,
+        a.name,
         u.account_id,
         u.is_display
         FROM
@@ -96,7 +98,7 @@
         a.avatar,
         a.`name`,
         u.username,
-        a.id AS accountId
+        u.account_id
         FROM
         account a,
         USER u
@@ -105,6 +107,44 @@
         u.account_id = a.id
         AND u.is_display = TRUE
         AND u.id = #{id}
+    </select>
+
+    <select id="listUserInfoInRishiqingDB" resultMap="rsqUserMap">
+        SELECT
+        u.id,
+        u.team_id,
+        t.name as team_name,
+        a.email,
+        a.phone_number,
+        a.name,
+        u.username,
+        u.account_id
+        FROM
+        `user` AS u
+        INNER JOIN account AS a ON a.id = u.account_id
+        INNER JOIN team AS t ON u.team_id = t.id
+        WHERE
+        u.is_display = 1
+        AND t.id = #{params.teamId};
+    </select>
+
+    <select id="getUserInfoInRishiqingDBByUsername" resultMap="rsqUserMap">
+        SELECT
+        u.id,
+        u.team_id,
+        t.name as team_name,
+        a.email,
+        a.phone_number,
+        a.name,
+        u.username,
+        u.account_id
+        FROM
+        `user` AS u
+        INNER JOIN account AS a ON a.id = u.account_id
+        INNER JOIN team AS t ON u.team_id = t.id
+        WHERE
+        u.is_display = 1
+        AND u.username = #{params.username}
     </select>
 
     <!-- 获取版本信息 -->

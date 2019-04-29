@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,25 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
         }else{
             return null;
         }
+    }
+
+    @Override
+    public List<RsqUser> listUserInfoInRishiqingDB() {
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("teamId", RsqSystemConstants.RISHIQING_TEAM_ID);
+        List<RsqUser> rsqUsers = rsqCommonMapper.listUserInfoInRishiqingDB(queryMap);
+        if (rsqUsers.size() == 0) {
+            return new ArrayList<>();
+        }
+        return rsqUsers;
+    }
+
+    @Override
+    public RsqUser getUserInfoInRishiqingDBByUsername(String username) {
+        Map<String,Object> queryMap = new HashMap<>();
+        queryMap.put("username",username);
+        RsqUser rsqUser = rsqCommonMapper.getUserInfoInRishiqingDBByUsername(queryMap);
+        return rsqUser;
     }
 
     @Override
