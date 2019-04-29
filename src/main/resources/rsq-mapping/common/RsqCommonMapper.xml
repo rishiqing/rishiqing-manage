@@ -145,6 +145,7 @@
         WHERE
         u.is_display = 1
         AND u.username = #{params.username}
+        AND u.team_id = #{params.teamId}
     </select>
 
     <!-- 获取版本信息 -->

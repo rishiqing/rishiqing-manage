@@ -49,4 +49,9 @@ public interface IUserService extends ICommonService<User> {
 	 */
 	public User findByPhone(String phone);
 
+	/**
+	 * 通过 rsqUsername 查找用户
+	 */
+	public User findByRsqUsername(String rsqUsername);
+
 }

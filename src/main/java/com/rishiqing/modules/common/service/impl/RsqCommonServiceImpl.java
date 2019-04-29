@@ -1,6 +1,8 @@
 package com.rishiqing.modules.common.service.impl;
 
+import cn.jeeweb.modules.sys.entity.User;
 import cn.jeeweb.modules.sys.security.shiro.realm.UserRealm;
+import cn.jeeweb.modules.sys.service.IUserService;
 import cn.jeeweb.modules.sys.utils.PhoneFormatCheckUtils;
 import cn.jeeweb.modules.sys.utils.UserUtils;
 import com.rishiqing.core.constant.RsqSystemConstants;
@@ -34,9 +36,20 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     @Autowired
     private RsqCommonMapper rsqCommonMapper;
 
+    @Autowired
+    private IUserService userService;
+
     @Override
     public boolean judgeUserPermission() {
-        RsqUser userInfo = getUserInfoInRishiqingDB();
+        //获取当前用户信息
+        UserRealm.Principal principal = UserUtils.getPrincipal();
+        String username = principal.getUsername();
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            return false;
+        }
+        String rsqUsername = user.getRsqUsername();
+        RsqUser userInfo = getUserInfoInRishiqingDBByUsername(rsqUsername);
         if(userInfo != null){
             return true;
         }
@@ -86,6 +99,7 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     public RsqUser getUserInfoInRishiqingDBByUsername(String username) {
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("username",username);
+        queryMap.put("teamId", RsqSystemConstants.RISHIQING_TEAM_ID);
         RsqUser rsqUser = rsqCommonMapper.getUserInfoInRishiqingDBByUsername(queryMap);
         return rsqUser;
     }

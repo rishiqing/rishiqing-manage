@@ -63,6 +63,14 @@ public class UserServiceImpl extends CommonServiceImpl<UserMapper, User> impleme
 	}
 
 	@Override
+	public User findByRsqUsername(String rsqUsername) {
+		if (StringUtils.isEmpty(rsqUsername)) {
+			return null;
+		}
+		return selectOne(new EntityWrapper<User>(User.class).eq("rsqUsername", rsqUsername));
+	}
+
+	@Override
 	public boolean insert(User user) {
 		passwordService.encryptPassword(user);
 		return super.insert(user);
