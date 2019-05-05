@@ -152,6 +152,45 @@
             team_id = #{teamId}
     </select>
 
+    <!-- 通过 teamId 和 teamVersionId 获取公司状态 -->
+    <select id="getRsqTeamStatusByTeamIdAndTeamVersionId" resultType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
+        SELECT
+            id AS id,
+            version AS version,
+            team_version_id AS teamVersionId,
+            team_id AS teamId,
+            date_created AS dateCreated,
+            user_limit AS userLimit,
+            last_updated lastUpdated,
+            dead_line AS deadLine,
+            is_expired AS isExpired
+        FROM
+            team_status
+        WHERE
+            team_id=#{teamId}
+            AND team_version_id=#{teamVersionId}
+
+    </select>
+
+    <!-- 通过 teamId 获取所有可用的 teamStatus 列表 -->
+    <select id="listTeamStatusByTeamId" resultType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
+        SELECT
+            id AS id,
+            version AS version,
+            team_version_id AS teamVersionId,
+            team_id AS teamId,
+            date_created AS dateCreated,
+            user_limit AS userLimit,
+            last_updated lastUpdated,
+            dead_line AS deadLine,
+            is_expired AS isExpired
+        FROM
+            team_status
+        WHERE
+            team_id=#{teamId} AND is_expired = 1
+
+    </select>
+
     <!-- 更新teamStatus信息 -->
     <update id="updateTeamStatus" parameterType="com.rishiqing.modules.teammanage.entity.RsqTeamStatus">
         UPDATE team_status

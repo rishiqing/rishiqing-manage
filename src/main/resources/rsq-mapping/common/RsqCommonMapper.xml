@@ -153,6 +153,19 @@
       SELECT id, type from team_version WHERE type = #{versionName}
     </select>
 
+    <select id="getTeamVersionByType" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
+        SELECT id, type from team_version WHERE type = #{type}
+    </select>
+
+    <select id="getTeamVersionById" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
+       SELECT id, type from team_version WHERE id = #{id}
+    </select>
+
+    <!-- 获取所有 teamVersion 组成列表 -->
+    <select id="listTeamVersion" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion" >
+        SELECT id, type FROM team_version
+    </select>
+
     <!-- 获取产品信息 -->
     <select id="getRsqPayProductByTeamVersionId" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
         SELECT * from pay_product WHERE team_version_id = #{teamVersionId}

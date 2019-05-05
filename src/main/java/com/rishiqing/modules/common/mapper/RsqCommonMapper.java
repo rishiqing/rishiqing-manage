@@ -31,9 +31,19 @@ public interface RsqCommonMapper {
     List<RsqUser> getUserInfoInRishiqingDBById(@Param("id")Integer userId);
 
     /**
-     * 获取team版本信息
+     * 通过 teamVersion id 获取 teamVersion
      */
-    RsqTeamVersion getTeamVersion(@Param("versionName") String versionName);
+    RsqTeamVersion getTeamVersionById(@Param("id") Integer id);
+
+    /**
+     * 通过 type 获取 teamVersion
+     */
+    RsqTeamVersion getTeamVersionByType(@Param("type") String type);
+
+    /**
+     * 获取所有的 teamVersion 列表，用来做匹配
+     */
+    List<RsqTeamVersion> listTeamVersion();
 
     /**
      * 获取产品信息，通过购买版本

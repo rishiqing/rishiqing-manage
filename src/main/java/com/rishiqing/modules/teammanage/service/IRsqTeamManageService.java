@@ -37,31 +37,31 @@ public interface IRsqTeamManageService extends ICommonService<RsqTeamManage> {
      * 开通试用
      * @param paramMap
      */
-    Map<String, String> rsqTry(Map<String, String> paramMap);
+    Map<String, String> rsqTry(Map<String, Object> paramMap);
 
     /**
      * 购买
      * @param paramMap
      */
-    Map<String, String> rsqBuy(Map<String, String> paramMap);
+    Map<String, String> rsqBuy(Map<String, Object> paramMap);
 
     /**
      * 续费
      * @param paramMap
      */
-    Map<String, String> rsqRenewal(Map<String, String> paramMap);
+    Map<String, String> rsqRenewal(Map<String, Object> paramMap);
 
     /**
      * 增加人数
      * @param paramMap
      */
-    Map<String, String> rsqAdd(Map<String, String> paramMap);
+    Map<String, String> rsqAdd(Map<String, Object> paramMap);
 
     /**
      * 版本升级
      * @param paramMap
      */
-    Map<String, String> rsqUpdate(Map<String, String> paramMap);
+    Map<String, String> rsqUpdate(Map<String, Object> paramMap);
 
     /**
      * 当前用户操作权限判断

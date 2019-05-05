@@ -8,6 +8,7 @@ import cn.jeeweb.core.query.data.Queryable;
 import com.rishiqing.core.constant.RsqSystemConstants;
 import com.rishiqing.core.util.CommonUtil;
 import com.rishiqing.modules.common.entity.RsqPayProduct;
+import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 import com.rishiqing.modules.common.service.IRsqCommonService;
 import com.rishiqing.modules.teammanage.entity.RsqPayOperator;
@@ -16,6 +17,7 @@ import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
 import com.rishiqing.modules.teammanage.mapper.RsqTeamManageMapper;
 import com.rishiqing.modules.teammanage.service.IRsqTeamManageService;
+import freemarker.template.SimpleDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Title: 团队管理
@@ -125,28 +125,50 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             resMap.put("expired", "未创建公司");
             return resMap;
         }
-
-        //获取teamId
-        String teamId = rsqTeamManage.getId();
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
-        if(rsqTeamStatus == null){
+        // 通过公司 id 获取公司在启用的版本信息
+        List<RsqTeamStatus> teamStatusList = baseMapper.listTeamStatusByTeamId(Long.parseLong(rsqTeamManage.getId()));
+        // 如果公司没有可用的状态信息，说明要么过期，要么没有执行过充值
+        if (teamStatusList.size() == 0) {
             resMap.put("versionName", "不是会员");
             resMap.put("expired", "已创建公司");
             return resMap;
-        }else{
-            Integer teamVersionId = rsqTeamStatus.getTeamVersionId();
-            RsqPayProduct payProduct = rsqCommonService.getRsqPayProductByTeamVersionId(teamVersionId);
+        } else {
+            // 获取所有的 rsqTeamVersion ，用来做对比
+            Map<String ,Integer> typeToIdMap = new HashMap<>();
+            Map<Integer, RsqTeamVersion> idToTeamVersionMap = new HashMap<>();
+            List<RsqTeamVersion> teamVersionList = rsqCommonService.listTeamVersion();
+            for (RsqTeamVersion it : teamVersionList) {
+                typeToIdMap.put(it.getType(), it.getId());
+                idToTeamVersionMap.put(it.getId(), it);
+            }
+
+            Map<Integer, RsqTeamStatus> teamVersionIdToTeamStatusMap = new HashMap<>();
+            for (RsqTeamStatus it : teamStatusList) {
+                teamVersionIdToTeamStatusMap.put(it.getTeamVersionId(), it);
+            }
+
+            // 优先级遍历
+            RsqTeamStatus defaultTeamStatus;
+            if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_TRIAL_ENTERPRISE)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_TRIAL_ENTERPRISE));
+            } else if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_TRIAL_PROFESSIONAL)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_TRIAL_PROFESSIONAL));
+            } else if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_ADVANCED_ENTERPRISE)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_ADVANCED_ENTERPRISE));
+            } else if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE));
+            } else if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_ADVANCED_PROFESSIONAL)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_ADVANCED_PROFESSIONAL));
+            } else if (teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL)) != null) {
+                defaultTeamStatus = teamVersionIdToTeamStatusMap.get(typeToIdMap.get(RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL));
+            } else {
+                defaultTeamStatus = null;
+            }
+            RsqPayProduct payProduct = rsqCommonService.getRsqPayProductByTeamVersionId(defaultTeamStatus.getTeamVersionId());
+            RsqTeamVersion teamVersion = idToTeamVersionMap.get(defaultTeamStatus.getTeamVersionId());
             resMap.put("versionName", payProduct.getDescription());
-            if(rsqTeamStatus.getExpired()){
-                resMap.put("expired", "已失效");
-            }else{
-                resMap.put("expired", "未失效");
-            }
-            if(payProduct.getDescription().equals(RsqSystemConstants.BASE_PROFESSIONAL_NAME)){
-                resMap.put("buyTypeRadio", "zy");
-            }else if(payProduct.getDescription().equals(RsqSystemConstants.BASE_ENTERPRISE_NAME)){
-                resMap.put("buyTypeRadio", "qy");
-            }
+            resMap.put("expired", "未失效");
+            resMap.put("productName",teamVersion.getType());
         }
         return resMap;
     }
@@ -165,19 +187,25 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Transactional
     @Override
-    public Map<String, String> rsqTry(Map<String, String> paramMap) {
+    public Map<String, String> rsqTry(Map<String, Object> paramMap) {
         logger.debug("====开通试用start");
         Map<String, String> resMap = new HashMap<>();
-        String teamId = paramMap.get("id");
+        Integer teamId = (Integer) paramMap.get("teamId");
+        String productName = (String) paramMap.get("productName");
 
+        // 获取公司版本信息
+        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
         //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),
+                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
+        );
 
         if(rsqTeamStatus != null){
             //判断用户会员是否到期
             if(rsqTeamStatus.getExpired()){
                 //用户会员失效，初始化teamStatus
-                rsqTeamStatus = resetTeamStatus(rsqTeamStatus);
+                resetTeamStatus(rsqTeamStatus);
                 //更新teamStatus
                 updateTeamStatus(rsqTeamStatus, paramMap);
             }else{
@@ -188,13 +216,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             //teamStatus不存在，创建teamStatus
             rsqTeamStatus = addTeamStatus(paramMap);
         }
-
-        paramMap.put("body", CommonUtil.getBodyForTrial(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
-        paramMap.put("payType", "pay");
         //添加充值记录
-        addPayOrder(paramMap);
+        RsqPayOrder rsqPayOrder = addPayOrder(rsqTeamStatus , paramMap);
         // 添加充值人员操作记录
-        addPayOperator(paramMap);
+        RsqPayOperator rsqPayOperator = addPayOperator(rsqPayOrder, paramMap);
         logger.debug("====开通试用end");
         resMap.put("success", "开通适用成功！");
         return resMap;
@@ -206,19 +231,27 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Transactional
     @Override
-    public Map<String, String> rsqBuy(Map<String, String> paramMap) {
+    public Map<String, String> rsqBuy(Map<String, Object> paramMap) {
         //定义返回值
         Map<String, String> resMap = new HashMap<>();
         logger.debug("====购买start");
-        String teamId = paramMap.get("id");
+        Integer teamId = (Integer) paramMap.get("teamId");
+        String productName = (String) paramMap.get("productName");
 
+        // 获取公司版本信息
+        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
         //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),
+                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
+        );
+
+
         if(rsqTeamStatus != null){
             //判断用户会员是否到期
             if(rsqTeamStatus.getExpired()){
                 //重置会员信息
-                rsqTeamStatus = resetTeamStatus(rsqTeamStatus);
+                resetTeamStatus(rsqTeamStatus);
                 //更新会员信息
                 updateTeamStatus(rsqTeamStatus, paramMap);
             }else{
@@ -229,13 +262,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             //teamStatus不存在，创建teamStatus
             rsqTeamStatus = addTeamStatus(paramMap);
         }
-
-        paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
-        paramMap.put("payType", "pay");
         //添加充值记录
-        addPayOrder(paramMap);
+        RsqPayOrder rsqPayOrder = addPayOrder(rsqTeamStatus, paramMap);
         // 添加充值人员操作记录
-        addPayOperator(paramMap);
+        RsqPayOperator rsqPayOperator = addPayOperator(rsqPayOrder, paramMap);
         logger.debug("====购买end");
         resMap.put("success", "购买成功！");
         return resMap;
@@ -247,15 +277,22 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Transactional
     @Override
-    public Map<String, String> rsqRenewal(Map<String, String> paramMap) {
+    public Map<String, String> rsqRenewal(Map<String, Object> paramMap) {
         //定义返回值
         Map<String, String> resMap = new HashMap<>();
 
         logger.debug("====续费start");
-        String teamId = paramMap.get("id");
+        Integer teamId = (Integer) paramMap.get("teamId");
+        String productName = (String) paramMap.get("productName");
 
+        // 获取公司版本信息
+        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
         //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),
+                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
+        );
+
 
         if(rsqTeamStatus != null){
             //判断用户会员是否到期
@@ -271,13 +308,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             resMap.put("fail", "续费失败！当前用户不是会员，请先开通会员！");
             return resMap;
         }
-
-        paramMap.put("payType", "renewal");
-        paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
-        addPayOrder(paramMap);
+        RsqPayOrder rsqPayOrder = addPayOrder(rsqTeamStatus, paramMap);
         // 添加充值人员操作记录
-        addPayOperator(paramMap);
+        RsqPayOperator rsqPayOperator = addPayOperator(rsqPayOrder, paramMap);
         logger.debug("====续费end");
         resMap.put("success", "续费成功!");
         return resMap;
@@ -289,13 +323,20 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Transactional
     @Override
-    public Map<String, String> rsqAdd(Map<String, String> paramMap) {
+    public Map<String, String> rsqAdd(Map<String, Object> paramMap) {
         Map<String, String> resMap = new HashMap<>();
         logger.debug("====增加人数start");
-        String teamId = paramMap.get("id");
+        Integer teamId = (Integer) paramMap.get("teamId");
+        String productName = (String) paramMap.get("productName");
 
+        // 获取公司版本信息
+        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
         //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),
+                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
+        );
+
 
         if(rsqTeamStatus != null){
             //判断用户会员是否到期
@@ -312,13 +353,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             resMap.put("fail", "添加成员失败！当前用户不是会员，请先开通会员！");
             return resMap;
         }
-
-        paramMap.put("payType", "add");
-        paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
-        addPayOrder(paramMap);
+        RsqPayOrder rsqPayOrder = addPayOrder(rsqTeamStatus, paramMap);
         // 添加充值人员操作记录
-        addPayOperator(paramMap);
+        RsqPayOperator rsqPayOperator = addPayOperator(rsqPayOrder, paramMap);
         logger.debug("====增加成员end");
 
         resMap.put("success", "添加成员成功！");
@@ -331,13 +369,20 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      */
     @Transactional
     @Override
-    public Map<String, String> rsqUpdate(Map<String, String> paramMap) {
+    public Map<String, String> rsqUpdate(Map<String, Object> paramMap) {
         Map<String, String> resMap = new HashMap<>();
         logger.debug("====版本更新start");
-        String teamId = paramMap.get("id");
+        Integer teamId = (Integer) paramMap.get("teamId");
+        String productName = (String) paramMap.get("productName");
 
+        // 获取公司版本信息
+        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
         //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamId(teamId);
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),
+                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
+        );
+
 
         if(rsqTeamStatus != null){
             ///判断用户会员是否到期
@@ -354,13 +399,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             resMap.put("fail", "版本升级失败！当前用户不是会员，请先开通会员！");
             return resMap;
         }
-
-        paramMap.put("payType", "update");
-        paramMap.put("body", CommonUtil.getBodyForBase(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
         //添加充值记录
-        addPayOrder(paramMap);
+        RsqPayOrder rsqPayOrder = addPayOrder(rsqTeamStatus, paramMap);
         // 添加充值人员操作记录
-        addPayOperator(paramMap);
+        RsqPayOperator rsqPayOperator = addPayOperator(rsqPayOrder, paramMap);
         logger.debug("====版本更新end");
 
         resMap.put("success", "版本升级成功！");
@@ -372,18 +414,13 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      * @param rsqTeamStatus
      * @return
      */
-    private RsqTeamStatus resetTeamStatus(RsqTeamStatus rsqTeamStatus){
+    private void resetTeamStatus(RsqTeamStatus rsqTeamStatus){
         Date today = new Date();
-        //最后更新时间修改为现在
-        rsqTeamStatus.setLastUpdated(today);
-
         //会员到期时间修改为今天
         today = CommonUtil.delHHMMSS(today);
         rsqTeamStatus.setDeadLine(today);
-
         //人数修改为0
         rsqTeamStatus.setUserLimit(0);
-        return rsqTeamStatus;
     }
 
 
@@ -400,7 +437,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      * 添加充值记录
      * @param paramMap
      */
-    private void addPayOrder(Map<String, String> paramMap){
+    private RsqPayOrder addPayOrder(RsqTeamStatus rsqTeamStatus, Map<String, Object> paramMap){
+        if (rsqTeamStatus == null || paramMap == null) {
+            return null;
+        }
         Date date = new Date();
         //创建充值记录对象
         RsqPayOrder rsqPayOrder = new RsqPayOrder();
@@ -415,51 +455,31 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         rsqPayOrder.setLastUpdated(date);
 
         /**body订单说明*/
-        rsqPayOrder.setBody(paramMap.get("body"));
+        rsqPayOrder.setBody(CommonUtil.getBodyForTrial(rsqTeamStatus.getUserLimit(), rsqTeamStatus.getDeadLine()));
 
         /** plateform设置充值平台 */
         rsqPayOrder.setPlatform("系统");
 
         /** days 购买天数*/
-        if(paramMap.get("buyDays") != null){
-            rsqPayOrder.setDays(Integer.parseInt(paramMap.get("buyDays")));
-        }else{
-            rsqPayOrder.setDays(0);
-        }
+        rsqPayOrder.setDays((Integer) paramMap.get("days"));
 
         /** teamid */
-        rsqPayOrder.setTeamId(Integer.parseInt(paramMap.get("id")));
+        rsqPayOrder.setTeamId((Integer) paramMap.get("teamId"));
 
         /** payProductId 购买的产品，续费，加人，不填此字段*/
-        if(paramMap.get("payProductId") != null){
-            rsqPayOrder.setPayProductId(Integer.parseInt(paramMap.get("payProductId")));
-        }else {
-            //获取购买的版本
-            Integer teamVersionId = null;
-            if(paramMap.get("teamVersionId") == null){
-                String version = paramMap.get("buyVersion");
-                if("zy".equals(version)){
-                    teamVersionId = rsqCommonService.getBaseProfessionalVerionId();
-                }else if("qy".equals(version)){
-                    teamVersionId = rsqCommonService.getBaseEnterpriseVersionId();
-                }
-            } else {
-                teamVersionId = Integer.parseInt(paramMap.get("teamVersionId"));
-            }
-            RsqPayProduct rsqPayProduct = rsqCommonService.getRsqPayProductByTeamVersionId(teamVersionId);
-            rsqPayOrder.setPayProductId(rsqPayProduct.getId());
-        }
+        RsqPayProduct rsqPayProduct = rsqCommonService.getRsqPayProductByTeamVersionId(rsqTeamStatus.getTeamVersionId());
+        rsqPayOrder.setPayProductId(rsqPayProduct.getId());
 
         /** totalFee 订单总价*/
         if(paramMap.get("totalFee") != null){
-            rsqPayOrder.setTotalFee(Double.parseDouble(paramMap.get("totalFee")));
+            rsqPayOrder.setTotalFee(Double.parseDouble((String) paramMap.get("totalFee")));
         }else{
             rsqPayOrder.setTotalFee(0.00);
         }
 
         /** userLimit 购买人数：升级，续费，不填写此字段*/
         if(paramMap.get("userLimit") != null){
-            rsqPayOrder.setUserLimit(Integer.parseInt(paramMap.get("userLimit")));
+            rsqPayOrder.setUserLimit((Integer) paramMap.get("userLimit"));
         }else{
             rsqPayOrder.setUserLimit(10);
         }
@@ -481,9 +501,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
          * renewals
          * update
          */
-        if(paramMap.get("payType") != null){
-            rsqPayOrder.setPayType(paramMap.get("payType"));
-        }
+        rsqPayOrder.setPayType((String) paramMap.get("payType"));
 
         /** 获取订单号 */
         String outTradeNo = CommonUtil.getOutTradeNo();
@@ -495,8 +513,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         rsqPayOrder.setOutTradeNo(outTradeNo);
         paramMap.put("outTradeNo",outTradeNo);
 
-        // 添加订单
-        addPayOrder(rsqPayOrder);
+        //插入数据库
+        this.baseMapper.addPayOrder(rsqPayOrder);
+
+        return rsqPayOrder;
     }
 
     /**
@@ -506,33 +526,29 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      * @author codingR
      * @date 2019/4/17 15:02
      */
-    private void addPayOperator(Map<String, String> paramMap){
+    private RsqPayOperator addPayOperator(RsqPayOrder rsqPayOrder, Map<String, Object> paramMap){
+        if (rsqPayOrder == null || paramMap == null) {
+            return null;
+        }
+
         logger.debug("==== 添加操作人员记录 ===");
         // 创建操作记录对象
         RsqPayOperator operator = new RsqPayOperator();
 
         // 设置名字
-        operator.setName(paramMap.get("operator"));
+        operator.setName((String) paramMap.get("operator"));
 
         // 设置订单号
-        operator.setOutTradeNo(paramMap.get("outTradeNo"));
+        operator.setOutTradeNo((String) paramMap.get("outTradeNo"));
 
         // 设置用户 id
-        operator.setManageId(paramMap.get("manageId"));
+        operator.setManageId((String) paramMap.get("manageId"));
 
         addPayOperator(operator);
 
-    }
+        return operator;
 
-    /**
-     * 添加充值记录
-     * @param rsqPayOrder
-     */
-    private void addPayOrder(RsqPayOrder rsqPayOrder){
-        //插入数据库
-        this.baseMapper.addPayOrder(rsqPayOrder);
     }
-
     /**
      * 添加充值操作人员记录
      * @param rsqPayOperator 操作人员记录
@@ -548,7 +564,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
      * 添加teamStatus
      * @param paramMap
      */
-    private RsqTeamStatus addTeamStatus(Map<String, String> paramMap){
+    private RsqTeamStatus addTeamStatus(Map<String, Object> paramMap){
         try {
             Date gameOver = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2100-01-01 00:00:00");
             Date date = new Date();
@@ -559,20 +575,9 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             rsqTeamStatus.setVersion(0);
 
             //2、会员版本
-            String version = paramMap.get("buyVersion");
-            if("zy".equals(version)){
-                Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
-                rsqTeamStatus.setTeamVersionId(zyId);
-                paramMap.put("teamVersionId", zyId + "");
-            }else if("qy".equals(version)){
-                Integer qyId = rsqCommonService.getBaseEnterpriseVersionId();
-                rsqTeamStatus.setTeamVersionId(qyId);
-                paramMap.put("teamVersionId", qyId + "");
-            }else{
-                Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
-                rsqTeamStatus.setTeamVersionId(zyId);
-                paramMap.put("teamVersionId", zyId + "");
-            }
+            // 通过 type 获取会员版本信息
+            RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType((String) paramMap.get("productName"));
+            rsqTeamStatus.setTeamVersionId(rsqTeamVersion.getId());
 
             //3、是否过期,新创建的默认都是未过期的
             rsqTeamStatus.setExpired(false);
@@ -584,20 +589,20 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             rsqTeamStatus.setLastUpdated(date);
 
             //6、人数
-            String addMember = paramMap.get("buyNumbers");
+            Integer addMember = (Integer) paramMap.get("userLimit");
             if(addMember != null && !"".equals(addMember)){
-                rsqTeamStatus.setUserLimit(Integer.parseInt(addMember));
+                rsqTeamStatus.setUserLimit(addMember);
             }else{
                 rsqTeamStatus.setUserLimit(0);
             }
 
             //7、公司
-            rsqTeamStatus.setTeamId(Integer.parseInt(paramMap.get("id")));
+            rsqTeamStatus.setTeamId((Integer) paramMap.get("teamId"));
 
             //8、到期时间
-            String addDay = paramMap.get("buyDays");
+            Integer addDay = (Integer) paramMap.get("days");
             if(addDay != null && !"".equals(addDay)){
-                Date res = CommonUtil.addDays(date, Integer.parseInt(addDay));
+                Date res = CommonUtil.addDays(date, addDay);
                 if(res.getTime() > gameOver.getTime()) {
                     res = gameOver;
                 }
@@ -609,8 +614,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
                 }
                 rsqTeamStatus.setDeadLine(res);
             }
-
-            addTeamStatus(rsqTeamStatus);
+            //插入数据库
+            this.baseMapper.addTeamStatus(rsqTeamStatus);
             return rsqTeamStatus;
         } catch (Exception e) {
             e.printStackTrace();
@@ -619,51 +624,25 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
     }
 
     /**
-     * 添加teamStatus
-     */
-    private void addTeamStatus(RsqTeamStatus rsqTeamStatus){
-        //插入数据库
-        this.baseMapper.addTeamStatus(rsqTeamStatus);
-    }
-
-    /**
      * 更新teamStatus
      */
-    private void updateTeamStatus(RsqTeamStatus rsqTeamStatus,Map<String, String> paramMap){
+    private void updateTeamStatus(RsqTeamStatus rsqTeamStatus,Map<String, Object> paramMap){
         //1、人数更新
-        String addMember = paramMap.get("buyNumbers");
+        Integer addMember = (Integer) paramMap.get("userLimit");
         if(addMember != null && !"".equals(addMember)){
-            rsqTeamStatus.setUserLimit(rsqTeamStatus.getUserLimit() + Integer.parseInt(addMember));
+            rsqTeamStatus.setUserLimit(rsqTeamStatus.getUserLimit() + addMember);
         }
         //2、天数更新
-        String addDay = paramMap.get("buyDays");
+        Integer addDay = (Integer) paramMap.get("days");
         if(addDay != null && !"".equals(addDay)){
             //当前到期日期
             Date deadLine = rsqTeamStatus.getDeadLine();
-            rsqTeamStatus.setDeadLine(CommonUtil.addDays(deadLine, Integer.parseInt(addDay)));
+            rsqTeamStatus.setDeadLine(CommonUtil.addDays(deadLine, addDay));
         }
-        //3、版本更新
-        String version = paramMap.get("buyVersion");
-        if("zy".equals(version)){
-            Integer zyId = rsqCommonService.getBaseProfessionalVerionId();
-            rsqTeamStatus.setTeamVersionId(zyId);
-            paramMap.put("teamVersionId", zyId + "");
-        }else if("qy".equals(version)){
-            Integer qyId = rsqCommonService.getBaseEnterpriseVersionId();
-            rsqTeamStatus.setTeamVersionId(qyId);
-            paramMap.put("teamVersionId", qyId + "");
-        }
-        //4、状态更新
+        //3、状态更新
         rsqTeamStatus.setExpired(false);
-        //5、更新日期
+        //4、更新日期
         rsqTeamStatus.setLastUpdated(new Date());
-        updateTeamStatus(rsqTeamStatus);
-    }
-
-    /**
-     * 更新teamStatus
-     */
-    private void updateTeamStatus(RsqTeamStatus rsqTeamStatus){
         //更新teamStatus
         this.baseMapper.updateTeamStatus(rsqTeamStatus);
     }

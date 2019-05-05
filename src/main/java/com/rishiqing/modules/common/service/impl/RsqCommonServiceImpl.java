@@ -41,16 +41,8 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
 
     @Override
     public boolean judgeUserPermission() {
-        //获取当前用户信息
-        UserRealm.Principal principal = UserUtils.getPrincipal();
-        String username = principal.getUsername();
-        User user = userService.findByUsername(username);
-        if (user == null) {
-            return false;
-        }
-        String rsqUsername = user.getRsqUsername();
-        RsqUser userInfo = getUserInfoInRishiqingDBByUsername(rsqUsername);
-        if(userInfo != null){
+        RsqUser rsqUser = getUserInfoInRishiqingDB();
+        if (rsqUser != null) {
             return true;
         }
         return false;
@@ -61,17 +53,19 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
         //获取当前用户信息
         UserRealm.Principal principal = UserUtils.getPrincipal();
         String username = principal.getUsername();
-        String phone = principal.getPhone();
-        //如果用户名是邮箱格式，按邮箱查询，否则按手机号查
-        Map<String, Object> queryMap = new HashMap<>();
-        if(phone!= null && phone.isEmpty()) {
-            queryMap.put("phone" , phone);
-        } else {
-            queryMap.put("email" , username);
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            return null;
         }
-        // 装入 teamId
-        queryMap.put("teamId", RsqSystemConstants.RISHIQING_TEAM_ID);
-        return rsqCommonMapper.getUserInfoInRishiqingDB(queryMap);
+        String rsqUsername = user.getRsqUsername();
+        RsqUser userInfo = getUserInfoInRishiqingDBByUsername(rsqUsername);
+        if(userInfo == null){
+            return null;
+        }
+        if (!userInfo.getTeamId().toString().equals(RsqSystemConstants.RISHIQING_TEAM_ID.toString())) {
+            return null;
+        }
+        return userInfo;
     }
 
     @Override
@@ -85,6 +79,7 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     }
 
     @Override
+    @Deprecated
     public List<RsqUser> listUserInfoInRishiqingDB() {
         Map<String,Object> queryMap = new HashMap<>();
         queryMap.put("teamId", RsqSystemConstants.RISHIQING_TEAM_ID);
@@ -106,17 +101,27 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
 
     @Override
     public Integer getBaseProfessionalVerionId() {
-        return getTeamVersion(RsqSystemConstants.BASE_PROFESSIONAL).getId();
+        return getTeamVersionByType(RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL).getId();
     }
 
     @Override
     public Integer getBaseEnterpriseVersionId() {
-        return getTeamVersion(RsqSystemConstants.BASE_ENTERPRISE).getId();
+        return getTeamVersionByType(RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE).getId();
     }
 
     @Override
-    public RsqTeamVersion getTeamVersion(String versionName) {
-        return rsqCommonMapper.getTeamVersion(versionName);
+    public RsqTeamVersion getTeamVersionById(Integer id) {
+        return rsqCommonMapper.getTeamVersionById(id);
+    }
+
+    @Override
+    public RsqTeamVersion getTeamVersionByType (String type) {
+        return rsqCommonMapper.getTeamVersionByType(type);
+    }
+
+    @Override
+    public List<RsqTeamVersion> listTeamVersion () {
+        return rsqCommonMapper.listTeamVersion();
     }
 
     @Override

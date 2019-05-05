@@ -39,6 +39,7 @@ public interface IRsqCommonService {
      * 获取当前用户对应的日事清用户列表
      * @return
      */
+    @Deprecated
     List<RsqUser> listUserInfoInRishiqingDB ();
 
     /**
@@ -52,19 +53,25 @@ public interface IRsqCommonService {
      * 获取专业版id
      * @return
      */
+    @Deprecated
     Integer getBaseProfessionalVerionId();
 
     /**
      * 获取企业版id
      * @return
      */
+    @Deprecated
     Integer getBaseEnterpriseVersionId();
 
     /**
      * 获取team版本信息
      * @return
      */
-    RsqTeamVersion getTeamVersion(String versionName);
+    RsqTeamVersion getTeamVersionById(Integer id);
+
+    RsqTeamVersion getTeamVersionByType(String type);
+
+    List<RsqTeamVersion> listTeamVersion();
 
     /**
      * 获取专业版产品信息

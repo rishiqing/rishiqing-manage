@@ -5,6 +5,7 @@ import com.rishiqing.modules.teammanage.entity.RsqPayOperator;
 import com.rishiqing.modules.teammanage.entity.RsqPayOrder;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -37,7 +38,27 @@ public interface RsqTeamManageMapper extends BaseMapper<RsqTeamManage> {
      * @param teamId
      * @return
      */
+    @Deprecated
     RsqTeamStatus getRsqTeamStatusByTeamId(String teamId);
+
+    /**
+     * 通过公司 id 和 版本 id 获取公司状态信息
+     * @param teamId 公司 id
+     * @param teamVersionId 公司付费版本 id
+     * @return
+     * @author codingR
+     * @date 2019/4/30 12:12
+     */
+    RsqTeamStatus getRsqTeamStatusByTeamIdAndTeamVersionId(@Param("teamId")Long teamId, @Param("teamVersionId") Long teamVersionId);
+
+    /**
+     * 通过 teamId 获取公司可用的状态信息列表
+     * @param teamId 公司的 id
+     * @return list 公司状态列表
+     * @author codingR
+     * @date 2019/5/5 14:41
+     */
+    List<RsqTeamStatus> listTeamStatusByTeamId (Long teamId) ;
 
     /**
      * 更新teamStatus信息

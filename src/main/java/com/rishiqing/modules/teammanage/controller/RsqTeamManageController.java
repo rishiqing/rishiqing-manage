@@ -16,6 +16,7 @@ import cn.jeeweb.modules.sys.entity.User;
 import cn.jeeweb.modules.sys.utils.UserUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeFilter;
+import com.rishiqing.core.constant.RsqSystemConstants;
 import com.rishiqing.modules.teammanage.entity.RsqTeamStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,8 +129,14 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             resMap.put("fail", "开通试用失败，请联系管理员进行查看!");
             return resMap;
         }
-
-        Map<String, String> paramMap = paramsDeal(request);
+        // 参数验证
+        Map<String, Object> paramMap;
+        try {
+            paramMap = paramsDeal(request);
+        } catch (Exception e) {
+            resMap.put("fail", e.getMessage());
+            return resMap;
+        }
 
         try {
             resMap = rsqTeamManageService.rsqTry(paramMap);
@@ -163,7 +171,15 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = paramsDeal(request);
+        // 参数验证
+        Map<String, Object> paramMap;
+        try {
+            paramMap = paramsDeal(request);
+        } catch (Exception e) {
+            resMap.put("fail", e.getMessage());
+            return resMap;
+        }
+
         try {
             resMap = rsqTeamManageService.rsqBuy(paramMap);
         } catch (Exception e) {
@@ -197,7 +213,15 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = paramsDeal(request);
+        // 参数验证
+        Map<String, Object> paramMap;
+        try {
+            paramMap = paramsDeal(request);
+        } catch (Exception e) {
+            resMap.put("fail", e.getMessage());
+            return resMap;
+        }
+
         try {
             resMap = rsqTeamManageService.rsqRenewal(paramMap);
         } catch (Exception e) {
@@ -231,7 +255,15 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = paramsDeal(request);
+        // 参数验证
+        Map<String, Object> paramMap;
+        try {
+            paramMap = paramsDeal(request);
+        } catch (Exception e) {
+            resMap.put("fail", e.getMessage());
+            return resMap;
+        }
+
         try {
             resMap = rsqTeamManageService.rsqAdd(paramMap);
         } catch (Exception e) {
@@ -266,7 +298,14 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             return resMap;
         }
 
-        Map<String, String> paramMap = paramsDeal(request);
+        // 参数验证
+        Map<String, Object> paramMap;
+        try {
+            paramMap = paramsDeal(request);
+        } catch (Exception e) {
+            resMap.put("fail", e.getMessage());
+            return resMap;
+        }
         try {
             resMap = rsqTeamManageService.rsqUpdate(paramMap);
         } catch (Exception e) {
@@ -282,25 +321,50 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
      * @param request
      * @return
      */
-    private Map<String, String> paramsDeal(HttpServletRequest request){
-        Map<String, String> paramMap = new HashMap<>();
+    private Map<String, Object> paramsDeal(HttpServletRequest request) throws Exception {
+        Map<String, Object> paramMap = new HashMap<>();
         //获取团队id
-        String id = request.getParameter("teamId");
-        paramMap.put("id", id);
+        String teamId = request.getParameter("teamId");
+        if (teamId == null) {
+            throw new Exception("未找到当前公司");
+        }
+        paramMap.put("teamId", Integer.parseInt(teamId));
         //获取版本信息
-        String buyVersion = request.getParameter("buyTypeRadio");
-        paramMap.put("buyVersion", buyVersion);
+        String productName = request.getParameter("productName");
+        if (productName == null) {
+            throw new Exception("产品信息未找到");
+        }
+        paramMap.put("productName", productName);
+        // 购买类型
+        String payType = request.getParameter("payType");
+        if(!RsqSystemConstants.PAY_TYPE_LIST.contains(payType)) {
+            throw new Exception("购买类型异常");
+        }
+        paramMap.put("payType",payType);
+
         //获取购买人数
-        String buyNumbers = request.getParameter("teamNumber");
-        paramMap.put("buyNumbers", buyNumbers);
+        String userLimit = request.getParameter("userLimit");
+        if (userLimit == null) {
+            throw new Exception("购买人数未找到");
+        }
+        paramMap.put("userLimit", Integer.parseInt(userLimit));
         //获取购买天数
-        String buyDays = request.getParameter("buyDay");
-        paramMap.put("buyDays", buyDays);
+        String days = request.getParameter("days");
+        if (days == null) {
+            throw new Exception("购买天数未找到");
+        }
+        paramMap.put("days", Integer.parseInt(days));
         //购买费用
         String totalFee = request.getParameter("totalFee");
+        if (totalFee == null) {
+            throw new Exception("总价未找到");
+        }
         paramMap.put("totalFee", totalFee);
         // 操作人员姓名记录
         String operator = request.getParameter("operator");
+        if(operator == null) {
+            throw new Exception("操作人员未找到");
+        }
         paramMap.put("operator", operator);
         // 获取系统用户id
         User user = UserUtils.getUser();

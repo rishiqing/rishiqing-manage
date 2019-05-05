@@ -1,3 +1,4 @@
+<%@ page import="com.rishiqing.core.constant.RsqSystemConstants" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/webpage/common/taglibs.jspf"%>
 <!DOCTYPE html>
@@ -34,32 +35,32 @@
 		<li class=""><a data-toggle="tab" href="#tab_buy" aria-expanded="false">购买</a></li>
 		<li class=""><a data-toggle="tab" href="#tab_renewal" aria-expanded="false">续费</a></li>
 		<li class=""><a data-toggle="tab" href="#tab_add" aria-expanded="false">增加成员</a></li>
-		<li class=""><a data-toggle="tab" href="#tab_Upgrade" aria-expanded="false">专业版升级企业版</a></li>
+		<li class=""><a data-toggle="tab" href="#tab_Upgrade" aria-expanded="false">升级</a></li>
 	</ul>
 	<div class="tab-content">
 		<div id="tab_try" class="tab-pane active">
 			<div class="panel-body">
 				<form:form id="rsq_try" modelAttribute="rsqTeamManage" action="${adminPath}/teammanage/rsqteammanage/rsqTry" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
-					<input type="hidden" name="payType" value="pay">
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.PAY%>">
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">开通版本:</label>
 						<div class="col-sm-8">
-							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_TRIAL_PROFESSIONAL%>" checked="">专业版
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="buyTypeRadio" value="qy" >企业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_TRIAL_ENTERPRISE%>" >企业版
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">人数:</label>
 						<div class="col-sm-8">
-							<input id="username" name="teamNumber" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="u1" name="userLimit" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">天数:</label>
 						<div class="col-sm-8">
-							<input id="a1" name="buyDay" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a1" name="days" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -77,7 +78,6 @@
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit" >确定</button>
-							<%--<input  class="btn btn btn-warning" type="reset" onclick="myReset()"/>--%>
 						</div>
 					</div>
 				</form:form>
@@ -87,25 +87,25 @@
 			<div class="panel-body">
 				<form:form id="rsq_buy" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqBuy" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
-					<input type="hidden" name="payType" value="pay">
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.PAY%>">
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">购买版本:</label>
 						<div class="col-sm-8">
-							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL%>" checked="">专业版
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="buyTypeRadio" value="qy" >企业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE%>" >企业版
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">人数:</label>
 						<div class="col-sm-8">
-							<input id="a2" name="teamNumber" class="form-control" type="number" min="-1" value="0" step="1">
+							<input id="a2" name="userLimit" class="form-control" type="number" min="-1" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">天数:</label>
 						<div class="col-sm-8">
-							<input id="a3" name="buyDay" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a3" name="days" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -123,7 +123,6 @@
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit">确定</button>
-							<%--<input  class="btn btn btn-warning" type="reset" onclick="myReset()"/>--%>
 						</div>
 					</div>
 				</form:form>
@@ -133,21 +132,13 @@
 			<div class="panel-body">
 				<form:form id="rsq_renewal" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqRenewal" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
-					<input type="hidden" name="payType" value="renewals">
-					<input name="teamNumber" type="hidden" value="0">
-					<input name="buyTypeRadio" type="hidden" value="${teamStatusMap.buyTypeRadio}">
-<%--					<div class="form-group col-sm-12">
-						<label class="col-sm-4 control-label">购买版本:</label>
-						<div class="col-sm-8">
-							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="buyTypeRadio" value="qy" >企业版
-						</div>
-					</div>--%>
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.RENEWALS%>"><!-- 续费 -->
+					<input name="userLimit" type="hidden" value="0">
+					<input name="productName" type="hidden" value="${teamStatusMap.productName}">
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">续费天数:</label>
 						<div class="col-sm-8">
-							<input id="a4" name="buyDay" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a4" name="days" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -165,7 +156,6 @@
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit">确定</button>
-							<%--<input  class="btn btn btn-warning" type="reset" onclick="myReset()"/>--%>
 						</div>
 					</div>
 				</form:form>
@@ -175,21 +165,13 @@
 			<div class="panel-body">
 				<form:form id="rsq_add" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqAdd" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
-					<input type="hidden" name="payType" value="add">
-					<input name="buyDay" type="hidden" value="0">
-					<input name="buyTypeRadio" type="hidden" value="${teamStatusMap.buyTypeRadio}">
-<%--					<div class="form-group col-sm-12">
-						<label class="col-sm-4 control-label">购买版本:</label>
-						<div class="col-sm-8">
-							<input type="radio" name="buyTypeRadio" value="zy" checked="">专业版
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="buyTypeRadio" value="qy" >企业版
-						</div>
-					</div>--%>
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.ADD%>">
+					<input name="days" type="hidden" value="0">
+					<input name="productName" type="hidden" value="${teamStatusMap.productName}">
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">增加人数:</label>
 						<div class="col-sm-8">
-							<input id="a5" name="teamNumber" class="form-control" type="number" min="0" value="0" step="1">
+							<input id="a5" name="userLimit" class="form-control" type="number" min="0" value="0" step="1">
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -217,10 +199,10 @@
 			<div class="panel-body">
 				<form:form id="rsq_update" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqUpdate" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
-					<input type="hidden" name="payType" value="update">
-					<input name="buyDay" type="hidden" value="0">
-					<input name="teamNumber" type="hidden" value="0">
-					<input type="hidden" name="buyTypeRadio" value="qy">
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.UPDATE%>">
+					<input name="days" type="hidden" value="0">
+					<input name="userLimit" type="hidden" value="0">
+					<input type="hidden" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE%>">
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">费用:</label>
 						<div class="col-sm-8">
@@ -236,7 +218,6 @@
 					<div class="form-group">
 						<div class="col-sm-4 col-sm-offset-5" >
 							<button class="btn btn-primary" type="submit">升级</button>
-							<%--<input  class="btn btn btn-warning" type="reset" onclick="myReset()"/>--%>
 						</div>
 					</div>
 				</form:form>
