@@ -13,8 +13,8 @@
 	<table class="table table-striped">
 		<thead>
 		<tr>
-			<th>团队名称</th>
-			<th>创建者</th>
+			<th width="20%">团队名称</th>
+			<th width="15%">创建者</th>
 			<th>成员数</th>
 			<th>公司状态</th>
 			<th>失效日期</th>
@@ -24,8 +24,8 @@
 		<tbody>
 		<c:forEach items="${rsqTeamInfoList}" var="it">
 			<tr>
-				<td>${rsqTeamManage.teamName}</td>
-				<td>${rsqTeamManage.createManName} </td>
+				<td width="20%">${rsqTeamManage.teamName}</td>
+				<td width="15%">${rsqTeamManage.createManName} </td>
 				<td>${rsqTeamManage.teamMember}</td>
 				<td>${it.versionName}（${it.expired}）</td>
 				<td>${it.deadLine}</td>
