@@ -15,7 +15,8 @@
 		<tr>
 			<th width="20%">团队名称</th>
 			<th width="15%">创建者</th>
-			<th>成员数</th>
+			<th>公司人数</th>
+			<th>购买人数</th>
 			<th>公司状态</th>
 			<th>失效日期</th>
 			<th>优先级</th>
@@ -27,6 +28,7 @@
 				<td width="20%">${rsqTeamManage.teamName}</td>
 				<td width="15%">${rsqTeamManage.createManName} </td>
 				<td>${rsqTeamManage.teamMember}</td>
+				<td>${it.userLimit}</td>
 				<td>${it.versionName}（${it.expired}）</td>
 				<td>${it.deadLine}</td>
 				<td>${it.priority}</td>
@@ -38,7 +40,8 @@
 <div class="tabs-container">
 	<ul class="nav nav-tabs">
 		<li class="active"><a data-toggle="tab" href="#tab_try" aria-expanded="true">开通试用</a></li>
-		<li class=""><a data-toggle="tab" href="#tab_buy" aria-expanded="false">购买</a></li>
+		<li class=""><a data-toggle="tab" href="#tab_buy" aria-expanded="false">购买基本版</a></li>
+		<li class=""><a data-toggle="tab" href="#tab_buy_ad" aria-expanded="false">购买高级版</a></li>
 		<li class=""><a data-toggle="tab" href="#tab_renewal" aria-expanded="false">续费</a></li>
 		<li class=""><a data-toggle="tab" href="#tab_add" aria-expanded="false">增加成员</a></li>
 		<li class=""><a data-toggle="tab" href="#tab_Upgrade" aria-expanded="false">升级</a></li>
@@ -78,7 +81,7 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">操作人员:</label>
 						<div class="col-sm-8">
-							<input id="c1" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+							<input id="c1" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
 						</div>
 					</div>
 					<div class="form-group">
@@ -97,9 +100,9 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">购买版本:</label>
 						<div class="col-sm-8">
-							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL%>" checked="">专业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL%>" checked="">基本专业版
 							&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE%>" >企业版
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE%>" >基本企业版
 						</div>
 					</div>
 					<div class="form-group col-sm-12">
@@ -123,7 +126,47 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">操作人员:</label>
 						<div class="col-sm-8">
-							<input id="c2" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+							<input id="c2" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-5" >
+							<button class="btn btn-primary" type="submit">确定</button>
+						</div>
+					</div>
+				</form:form>
+			</div>
+		</div>
+		<div id="tab_buy_ad" class="tab-pane">
+			<div class="panel-body">
+				<form:form id="rsq_buy" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqBuy" method="post" class="form-horizontal">
+					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
+					<input type="hidden" name="payType" value="<%=RsqSystemConstants.PAY%>">
+					<input type="hidden" name="days" value="36500">
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">购买版本:</label>
+						<div class="col-sm-8">
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_ADVANCED_PROFESSIONAL%>" checked="">高级专业版
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="radio" name="productName" value="<%=RsqSystemConstants.TEAM_VERSION_ADVANCED_ENTERPRISE%>" >高级企业版
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">人数:</label>
+						<div class="col-sm-8">
+							<input id="a21" name="userLimit" class="form-control" type="number" min="-1" value="0" step="1">
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">费用:</label>
+						<div class="col-sm-8">
+							<input id="b21" name="totalFee" class="form-control" type="number" min="0" value="0" step="1">
+						</div>
+					</div>
+					<div class="form-group col-sm-12">
+						<label class="col-sm-4 control-label">操作人员:</label>
+						<div class="col-sm-8">
+							<input id="c21" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
 						</div>
 					</div>
 					<div class="form-group">
@@ -135,6 +178,7 @@
 			</div>
 		</div>
 		<div id="tab_renewal" class="tab-pane">
+			<div><font color="red">* 续费只能操作优先级为“启用”的公司状态</font></div>
 			<div class="panel-body">
 				<form:form id="rsq_renewal" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqRenewal" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
@@ -156,7 +200,7 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">操作人员:</label>
 						<div class="col-sm-8">
-							<input id="c3" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+							<input id="c3" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
 						</div>
 					</div>
 					<div class="form-group">
@@ -168,6 +212,7 @@
 			</div>
 		</div>
 		<div id="tab_add" class="tab-pane">
+			<div><font color="red">* 添加成员只能操作优先级为“启用”的公司状态</font></div>
 			<div class="panel-body">
 				<form:form id="rsq_add" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqAdd" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
@@ -189,7 +234,7 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">操作人员:</label>
 						<div class="col-sm-8">
-							<input id="c4" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+							<input id="c4" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
 						</div>
 					</div>
 					<div class="form-group">
@@ -202,6 +247,7 @@
 			</div>
 		</div>
 		<div id="tab_Upgrade" class="tab-pane">
+			<div><font color="red">* 升级只能操作优先级为“启用”的公司状态</font></div>
 			<div class="panel-body">
 				<form:form id="rsq_update" modelAttribute="data" action="${adminPath}/teammanage/rsqteammanage/rsqUpdate" method="post" class="form-horizontal">
 					<input type="hidden" name="teamId" value="${rsqTeamManage.id}">
@@ -218,7 +264,7 @@
 					<div class="form-group col-sm-12">
 						<label class="col-sm-4 control-label">操作人员:</label>
 						<div class="col-sm-8">
-							<input id="c5" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名">
+							<input id="c5" name="operator" class="form-control" type="text" step="1" placeholder="输入操作人员姓名" required="required">
 						</div>
 					</div>
 					<div class="form-group">

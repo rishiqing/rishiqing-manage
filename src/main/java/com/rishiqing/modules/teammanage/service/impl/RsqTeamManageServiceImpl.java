@@ -112,6 +112,8 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
     }
 
 
+
+
     @Override
     public List<Map<String, String>> listTeamStatus(RsqTeamManage rsqTeamManage) {
         List<Map<String, String>> results = new ArrayList<>();
@@ -120,6 +122,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             Map<String, String> resMap = new HashMap<>();
             resMap.put("versionName", "不是会员");
             resMap.put("expired", "未创建公司");
+            resMap.put("userLimit","无");
             results.add(resMap);
         }
 
@@ -130,6 +133,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             Map<String, String> resMap = new HashMap<>();
             resMap.put("versionName", "不是会员");
             resMap.put("expired", "已创建公司");
+            resMap.put("userLimit","无");
             results.add(resMap);
         } else {
             // 获取所有的 rsqTeamVersion ，用来做对比
@@ -147,7 +151,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
             // 遍历公司状态列表
             RsqTeamVersion v;
             RsqPayProduct p;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             for (RsqTeamStatus status : teamStatusList) {
                 Map<String, String> resMap = new HashMap<>();
                 v = idToTeamVersionMap.get(status.getTeamVersionId());
@@ -171,6 +175,7 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
                 resMap.put("versionName",p.getDescription());
                 resMap.put("expired", "未失效");
                 resMap.put("productName",v.getType());
+                resMap.put("userLimit",status.getUserLimit() == -1 ? "无限制" : status.getUserLimit().toString());
                 results.add(resMap);
             }
             // 执行一次排序，通过 level 进行排序
@@ -466,16 +471,16 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
                 Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
         );
 
-
+        // 如果公司状态存在
         if(rsqTeamStatus != null){
-            ///判断用户会员是否到期
+            // 如果过期
             if(rsqTeamStatus.getExpired()){
-                //teamStatus不存在，返回提示，要求先给用户开通会员
-                resMap.put("fail", "版本升级失败！当前用户不是会员，请先开通会员！");
-                return resMap;
-            }else{
-                //更新teamStatus
+                //直接升级更新teamStatus
                 updateTeamStatus(rsqTeamStatus, paramMap);
+            }else{
+                // 未过期，则显示此用户还是会员，没法升级
+                resMap.put("fail", "版本升级失败！当前用户存在未过期的企业版版本，无法升级！");
+                return resMap;
             }
         }else{
             //teamStatus不存在，返回提示，要求先给用户开通会员

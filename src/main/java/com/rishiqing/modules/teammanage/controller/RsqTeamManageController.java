@@ -97,17 +97,19 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
     public String pay(Model model, HttpServletRequest request, HttpServletResponse response) {
         //获取要充值的团队id
         String id = request.getParameter("id");
+
         //根据id获取团队信息
         RsqTeamManage rsqTeamManage = rsqTeamManageService.getRsqTeamManageById(id);
-//        //获取团队的会员信息
-//        Map<String, String> teamStatusMap = rsqTeamManageService.getTeamStaus(rsqTeamManage);
-//        model.addAttribute("rsqTeamManage", rsqTeamManage);
-//        model.addAttribute("teamStatusMap", teamStatusMap);
+        model.addAttribute("rsqTeamManage", rsqTeamManage);
+
+        // 获取团队默认的公司状态信息
+        Map<String, String> teamStatusMap = rsqTeamManageService.getTeamStaus(rsqTeamManage);
+        model.addAttribute("teamStatusMap", teamStatusMap);
 
         // 获取所有的公司状态
         List<Map<String, String>> teamStatusList = rsqTeamManageService.listTeamStatus(rsqTeamManage);
-        model.addAttribute("rsqTeamManage", rsqTeamManage);
         model.addAttribute("rsqTeamInfoList", teamStatusList);
+
         return display("pay");
     }
 
