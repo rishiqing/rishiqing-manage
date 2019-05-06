@@ -479,12 +479,12 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
                 updateTeamStatus(rsqTeamStatus, paramMap);
             }else{
                 // 未过期，则显示此用户还是会员，没法升级
-                resMap.put("fail", "版本升级失败！当前用户存在未过期的企业版版本，无法升级！");
+                resMap.put("fail", "版本升级失败！当前用户存在未过期的基本企业版版本，无法升级！");
                 return resMap;
             }
         }else{
             //teamStatus不存在，返回提示，要求先给用户开通会员
-            resMap.put("fail", "版本升级失败！当前用户不是会员，请先开通会员！");
+            resMap.put("fail", "版本升级失败！当前用户不是基本专业版会员，请先开通基本专业版会员，再执行升级！");
             return resMap;
         }
         //添加充值记录
