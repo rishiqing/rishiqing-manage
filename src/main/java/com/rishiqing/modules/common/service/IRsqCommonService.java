@@ -78,6 +78,8 @@ public interface IRsqCommonService {
      */
     RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId);
 
+    List<RsqPayProduct> listRsqPayProduct();
+
     /**
      * 更新指定用户的密码
      */

@@ -111,6 +111,89 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         return this.baseMapper.getRsqTeamManageById(id);
     }
 
+
+    @Override
+    public List<Map<String, String>> listTeamStatus(RsqTeamManage rsqTeamManage) {
+        List<Map<String, String>> results = new ArrayList<>();
+        // 公司详情未空，则直接返回
+        if (rsqTeamManage == null) {
+            Map<String, String> resMap = new HashMap<>();
+            resMap.put("versionName", "不是会员");
+            resMap.put("expired", "未创建公司");
+            results.add(resMap);
+        }
+
+        // 通过公司 id 获取公司在启用的版本信息
+        List<RsqTeamStatus> teamStatusList = baseMapper.listTeamStatusByTeamId(Long.parseLong(rsqTeamManage.getId()));
+        // 如果公司没有可用的状态信息，说明要么过期，要么没有执行过充值
+        if (teamStatusList.size() == 0) {
+            Map<String, String> resMap = new HashMap<>();
+            resMap.put("versionName", "不是会员");
+            resMap.put("expired", "已创建公司");
+            results.add(resMap);
+        } else {
+            // 获取所有的 rsqTeamVersion ，用来做对比
+            Map<Integer, RsqTeamVersion> idToTeamVersionMap = new HashMap<>();
+            List<RsqTeamVersion> teamVersionList = rsqCommonService.listTeamVersion();
+            for (RsqTeamVersion it : teamVersionList) {
+                idToTeamVersionMap.put(it.getId(), it);
+            }
+            // 获取所有可以购买的产品
+            List<RsqPayProduct> payProductList = rsqCommonService.listRsqPayProduct();
+            Map<Integer, RsqPayProduct> teamVersionIdToPayProductMap = new HashMap<>();
+            for (RsqPayProduct it : payProductList) {
+                teamVersionIdToPayProductMap.put(it.getTeamVersionId(), it);
+            }
+            // 遍历公司状态列表
+            RsqTeamVersion v;
+            RsqPayProduct p;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            for (RsqTeamStatus status : teamStatusList) {
+                Map<String, String> resMap = new HashMap<>();
+                v = idToTeamVersionMap.get(status.getTeamVersionId());
+                p = teamVersionIdToPayProductMap.get(status.getTeamVersionId());
+                if(RsqSystemConstants.TEAM_VERSION_TRIAL_ENTERPRISE.equals(v.getType())){
+                    resMap.put("level","1");
+                } else if (RsqSystemConstants.TEAM_VERSION_TRIAL_PROFESSIONAL.equals(v.getType())) {
+                    resMap.put("level","2");
+                } else if (RsqSystemConstants.TEAM_VERSION_ADVANCED_ENTERPRISE.equals(v.getType())) {
+                    resMap.put("level","3");
+                } else if (RsqSystemConstants.TEAM_VERSION_BASE_ENTERPRISE.equals(v.getType())) {
+                    resMap.put("level","4");
+                } else if (RsqSystemConstants.TEAM_VERSION_ADVANCED_PROFESSIONAL.equals(v.getType())) {
+                    resMap.put("level","5");
+                } else if (RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL.equals(v.getType())) {
+                    resMap.put("level","6");
+                } else {
+                    continue;
+                }
+                resMap.put("deadLine",sdf.format(status.getDeadLine()));
+                resMap.put("versionName",p.getDescription());
+                resMap.put("expired", "未失效");
+                resMap.put("productName",v.getType());
+                results.add(resMap);
+            }
+            // 执行一次排序，通过 level 进行排序
+            Collections.sort(results, new Comparator<Map<String, String>>() {
+                @Override
+                public int compare(Map<String, String> o1, Map<String, String> o2) {
+                    return o1.get("level").compareTo(o2.get("level"));
+                }
+            });
+            // 重新遍历
+            boolean first = true;
+            for (Map<String, String> map : results) {
+                if (first) {
+                    map.put("priority","启用");
+                    first = false;
+                } else {
+                    map.put("priority","停用");
+                }
+            }
+        }
+        return results;
+    }
+
     /**
      * 获取团队会员信息
      * @param rsqTeamManage

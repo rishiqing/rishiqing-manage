@@ -168,7 +168,12 @@
 
     <!-- 获取产品信息 -->
     <select id="getRsqPayProductByTeamVersionId" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
-        SELECT * from pay_product WHERE team_version_id = #{teamVersionId}
+        SELECT id,price,description,can_buy,team_version_id from pay_product WHERE team_version_id = #{teamVersionId}
+    </select>
+
+    <!-- 获取所有产品列表 -->
+    <select id="listRsqPayProduct" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
+        SELECT id,price,description,can_buy,team_version_id FROM pay_product
     </select>
 
     <update id="updateRsqPassword" parameterType="com.rishiqing.modules.common.entity.RsqUser" >

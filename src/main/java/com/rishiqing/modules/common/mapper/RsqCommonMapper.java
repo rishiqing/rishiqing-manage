@@ -51,6 +51,11 @@ public interface RsqCommonMapper {
     RsqPayProduct getRsqPayProductByTeamVersionId(@Param("teamVersionId") Integer teamVersionId);
 
     /**
+     * 获取日事清所有的产品信息
+     */
+    List<RsqPayProduct> listRsqPayProduct();
+
+    /**
      * 更新日事清用户密码
      */
     int updateRsqPassword(RsqUser user);

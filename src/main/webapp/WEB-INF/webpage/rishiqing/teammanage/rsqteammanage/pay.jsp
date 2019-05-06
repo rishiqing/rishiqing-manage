@@ -15,17 +15,23 @@
 		<tr>
 			<th>团队名称</th>
 			<th>创建者</th>
-			<th>当前成员数</th>
-			<th>团队信息</th>
+			<th>成员数</th>
+			<th>公司状态</th>
+			<th>失效日期</th>
+			<th>优先级</th>
 		</tr>
 		</thead>
 		<tbody>
-		<tr>
-			<td>${rsqTeamManage.teamName}</td>
-			<td>${rsqTeamManage.createManName} </td>
-			<td>${rsqTeamManage.teamMember}</td>
-			<td>${teamStatusMap.versionName}（${teamStatusMap.expired}）</td>
-		</tr>
+		<c:forEach items="${rsqTeamInfoList}" var="it">
+			<tr>
+				<td>${rsqTeamManage.teamName}</td>
+				<td>${rsqTeamManage.createManName} </td>
+				<td>${rsqTeamManage.teamMember}</td>
+				<td>${it.versionName}（${it.expired}）</td>
+				<td>${it.deadLine}</td>
+				<td>${it.priority}</td>
+			</tr>
+		</c:forEach>
 		</tbody>
 	</table>
 </div>

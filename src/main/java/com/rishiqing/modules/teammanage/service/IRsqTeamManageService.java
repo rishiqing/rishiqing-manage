@@ -6,6 +6,7 @@ import cn.jeeweb.core.query.data.Queryable;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**   
@@ -26,6 +27,15 @@ public interface IRsqTeamManageService extends ICommonService<RsqTeamManage> {
      * @return
      */
     RsqTeamManage getRsqTeamManageById(String id);
+
+    /**
+     * 通过日事清公司信息获取所有的公司状态列表
+     * @param rsqTeamManage 日事清公司信息
+     * @return list 日事清所有公司列表信息
+     * @author codingR
+     * @date 2019/5/6 10:34
+     */
+    List<Map<String,String>> listTeamStatus(RsqTeamManage rsqTeamManage);
 
     /**
      * 获取团队的会员相关信息

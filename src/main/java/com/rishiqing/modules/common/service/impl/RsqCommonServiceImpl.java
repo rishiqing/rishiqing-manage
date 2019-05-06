@@ -130,6 +130,12 @@ public class RsqCommonServiceImpl implements IRsqCommonService {
     }
 
     @Override
+    public List<RsqPayProduct> listRsqPayProduct() {
+        return rsqCommonMapper.listRsqPayProduct();
+    }
+
+
+    @Override
     public Map updatePassword(String userId, String pwd) {
         Map resMap = new HashMap();
         resMap.put("flag", false);
