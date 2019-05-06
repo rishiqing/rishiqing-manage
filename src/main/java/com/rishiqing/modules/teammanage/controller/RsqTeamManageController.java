@@ -169,7 +169,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             //操作权限校验
             boolean flag = rsqTeamManageService.judgeUserPermission();
             if(!flag){
-                resMap.put("fail", "当前用户没有操作权限！");
+                resMap.put("fail", "没有操作权限！请联系管理员检查当前用户的权限配置，及账户是否关联新兵营账户！");
                 return resMap;
             }
         } catch (Exception e) {
@@ -211,7 +211,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             //操作权限校验
             boolean flag = rsqTeamManageService.judgeUserPermission();
             if(!flag){
-                resMap.put("fail", "当前用户没有操作权限！");
+                resMap.put("fail", "没有操作权限！请联系管理员检查当前用户的权限配置，及账户是否关联新兵营账户！");
                 return resMap;
             }
         } catch (Exception e) {
@@ -253,7 +253,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             //操作权限校验
             boolean flag = rsqTeamManageService.judgeUserPermission();
             if(!flag){
-                resMap.put("fail", "当前用户没有操作权限！");
+                resMap.put("fail", "没有操作权限！请联系管理员检查当前用户的权限配置，及账户是否关联新兵营账户！");
                 return resMap;
             }
         } catch (Exception e) {
@@ -296,7 +296,7 @@ public class RsqTeamManageController extends RsqBaseBeanController<RsqTeamManage
             //操作权限校验
             boolean flag = rsqTeamManageService.judgeUserPermission();
             if(!flag){
-                resMap.put("fail", "当前用户没有操作权限！");
+                resMap.put("fail", "没有操作权限！请联系管理员检查当前用户的权限配置，及账户是否关联新兵营账户！");
                 return resMap;
             }
         } catch (Exception e) {
