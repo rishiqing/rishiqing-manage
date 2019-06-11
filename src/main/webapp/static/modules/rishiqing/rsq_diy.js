@@ -8,6 +8,7 @@ layer.config({
  * 充值页面弹窗
  */
 function pay(title,url, gridId, infoId ,width,height){
+    console.log(url);
     url=url.replace("{id}",infoId);
     width = '800px';
     height = '530px';
@@ -163,6 +164,21 @@ function bindingAccount(title,url, gridId, infoId ,tipMsg, width,height){
         url=url.replace("{id}",infoId);
         top.layer.alert('该功能正在开发!', {icon: 0, title:'友情提示'});
     }
+}
+
+/** 导出 */
+function exportAdvice(title,url, gridId, width,height){
+    console.log("添加");
+    window.location.href = url;
+    // $.ajax({
+    //     url : url,
+    //     type : 'get',
+    //     data : {},
+    //     cache : false,
+    //     success : function(data) {
+    //         console.log(data);
+    //     }
+    // });
 }
 
 /** 获取选中行 */

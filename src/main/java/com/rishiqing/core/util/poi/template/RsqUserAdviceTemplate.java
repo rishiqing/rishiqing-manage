@@ -1,36 +1,41 @@
-package com.rishiqing.modules.useradvice.entity;
+package com.rishiqing.core.util.poi.template;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.rishiqing.core.util.poi.annotation.ExcelField;
 
-/**
- * 用户意见
- */
-public class RsqUserAdvice implements Serializable {
+public class RsqUserAdviceTemplate {
 
-    private Long userId;
+    @ExcelField(title = "用户id", align = 2, sort = 10)
+    private String userId;
 
+    @ExcelField(title = "邮件", align = 2, sort = 10)
     private String email;
 
+    @ExcelField(title = "电话号", align = 2, sort = 10)
     private String phoneNumber;
 
+    @ExcelField(title = "渠道", align = 2, sort = 10)
     private String client;
 
+    @ExcelField(title = "是否会员", align = 2, sort = 10)
     private String vip;
 
-    private Integer star;
+    @ExcelField(title = "评分", align = 2, sort = 10)
+    private String star;
 
+    @ExcelField(title = "评分类型", align = 2, sort = 10)
     private String type;
 
+    @ExcelField(title = "意见", align = 2, sort = 10)
     private String remark;
 
-    private Date dateCreated;
+    @ExcelField(title = "创建时间", align = 2, sort = 10)
+    private String dateCreated;
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -66,11 +71,11 @@ public class RsqUserAdvice implements Serializable {
         this.vip = vip;
     }
 
-    public Integer getStar() {
+    public String getStar() {
         return star;
     }
 
-    public void setStar(Integer star) {
+    public void setStar(String star) {
         this.star = star;
     }
 
@@ -90,13 +95,11 @@ public class RsqUserAdvice implements Serializable {
         this.remark = remark;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-
-
 }
