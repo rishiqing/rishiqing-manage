@@ -1,7 +1,6 @@
 package com.rishiqing.modules.useradvice.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
-import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 import com.rishiqing.modules.useradvice.entity.RsqUserAdvice;
 
 import java.util.List;
@@ -20,4 +19,6 @@ public interface RsqUserAdviceMapper extends BaseMapper<RsqUserAdvice> {
     List<RsqUserAdvice> ajaxList(Map map);
 
     int rsqUserAdviceCount(Map map);
+
+    List<RsqUserAdvice> export();
 }

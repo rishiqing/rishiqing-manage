@@ -17,10 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Title: 用户意见管理
@@ -60,6 +63,14 @@ public class UserAdviceController extends RsqBaseBeanController<RsqUserAdvice> {
         SerializeFilter filter = propertyPreFilterable.constructFilter(entityClass);
         String content = JSON.toJSONString(pagejson, filter);
         StringUtils.printJson(response, content);
+    }
+
+    @RequestMapping(value = "exportAdvice", method = RequestMethod.GET)
+    @ResponseBody
+    private void exportAdvice (Queryable queryable, PropertyPreFilterable propertyPreFilterable, HttpServletRequest request,
+                         HttpServletResponse response) throws IOException {
+        // 导出
+        rsqUserAdviceService.export(request,response);
     }
 
 }

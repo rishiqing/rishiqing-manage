@@ -3,55 +3,129 @@
 <mapper namespace="com.rishiqing.modules.useradvice.mapper.RsqUserAdviceMapper" >
 
   <resultMap id="BaseResultMap" type="com.rishiqing.modules.useradvice.entity.RsqUserAdvice" >
-      <!-- 意见id -->
-      <id column="id" property="id" jdbcType="VARCHAR" />
-      <!-- 创建日期 -->
-      <result column="create_date" property="dateCreated" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <!-- 评分 -->
-      <result column="star" property="star" jdbcType="VARCHAR" />
-      <!-- 渠道 -->
+      <!-- 用户 id -->
+      <id column="userId" property="userId" jdbcType="VARCHAR" />
+      <!-- 邮件 -->
+      <result column="email" property="email" jdbcType="VARCHAR" />
+      <!-- 电话号码 -->
+      <result column="phoneNumber" property="phoneNumber" jdbcType="VARCHAR" />
+      <!-- 客户端 -->
       <result column="client" property="client" jdbcType="VARCHAR"/>
-      <!-- 意见 -->
+      <!-- 是否是会员 -->
+      <result column="vip" property="vip" jdbcType="VARCHAR" />
+      <!-- 分数 -->
+      <result column="star" property="star" jdbcType="VARCHAR" />
+      <!-- 类型 -->
+      <result column="type" property="type" jdbcType="VARCHAR" />
+      <!-- 意见反馈 -->
       <result column="remark" property="remark" jdbcType="VARCHAR"/>
-      <!-- 提意见的人 -->
-      <result column="username" property="username" jdbcType="VARCHAR" />
+      <!-- 创建时间 -->
+      <result column="dateCreated" property="dateCreated" jdbcType="TIMESTAMP" javaType="java.util.Date" />
   </resultMap>
   
   <select id="ajaxList" resultMap="BaseResultMap">
-        SELECT
-          ua.id as id,
-          ua.client as client,
-          ua.remark AS remark,
+      SELECT
+          u.id AS userId,
+          a.email AS email,
+          a.phone_number AS phoneNumber,
+          ( CASE ua.client WHEN 'ios' THEN 'iOS' WHEN 'androidDevice' THEN 'android' END ) AS client,
+          IF
+          ( isNull( ts.id ), '非会员', '会员' ) AS vip,
           ua.star AS star,
-          a.`name` AS username,
-          ua.date_created as dateCreated
-        FROM
-            user_advice ua
-        LEFT JOIN `user` u ON u.id = ua.user_id
-        LEFT JOIN account a ON a.id = u.account_id
-        WHERE
+          ( CASE ua.type WHEN 'opinion' THEN '意见反馈' WHEN 'logout' THEN '解绑反馈' WHEN 'nps' THEN 'nps打分' END) AS `type`,
+          ua.remark AS remark,
+          ua.date_created AS dateCreated
+          FROM
+          account AS a
+          INNER JOIN USER AS u ON u.account_id = a.id
+          INNER JOIN user_advice AS ua ON ua.user_id = u.id
+          LEFT JOIN team AS t ON t.id = u.team_id
+          LEFT JOIN team_status AS ts ON ts.team_id = t.id
+      WHERE
           1 = 1
-          <if test="username != null and username != '' ">
-              AND INSTR(a.name, #{username}) > 0
+          <!-- 日期区间筛选 -->
+          <if test="startDate != null and endDate != null">
+              AND ua.date_created >= #{startDate}
+              AND #{endDate} >= ua.date_created
           </if>
-          <if test="createBeginDate != null">
-              AND ua.date_created >= #{createBeginDate}
-          </if>
-          <if test="createEndDate != null">
-              AND #{createEndDate} >= ua.date_created
-          </if>
-          <if test="star != null and star != '' ">
-              AND ua.star = #{star}
-          </if>
-          <if test="client != null and client != '' ">
+          <!-- 按照系统筛选 -->
+          <if test="client != null and client != ''">
               AND ua.client = #{client}
           </if>
+          <!-- 按照评分筛选 -->
+          <if test="star != null and star != ''">
+              AND ua.star = #{star}
+          </if>
+          <!-- 按照手机号搜索 -->
+          <if test="phoneNumber != null and phoneNumber != ''">
+              AND a.phone_number = #{phoneNumber}
+          </if>
+          <!-- 按照邮箱号搜索 -->
+          <if test="email != null and email != ''">
+              AND a.email = #{email}
+          </if>
+          <!-- 评分类型 -->
+          <if test="type != null and type != ''">
+              AND ua.type = #{type}
+          </if>
+
           ORDER BY
           ua.date_created DESC
+          <!-- 分页 -->
           <if test="offset != null and limit != null ">
               limit #{offset}, #{limit}
           </if>
   </select>
+
+    <select id="export" resultMap="BaseResultMap">
+        SELECT
+            u.id AS userId,
+            a.email AS email,
+            a.phone_number AS phoneNumber,
+            ( CASE ua.client WHEN 'ios' THEN 'iOS' WHEN 'androidDevice' THEN 'android' END ) AS client,
+            IF
+            ( isNull( ts.id ), '非会员', '会员' ) AS vip,
+            ua.star AS star,
+            ( CASE ua.type WHEN 'opinion' THEN '意见反馈' WHEN 'logout' THEN '解绑反馈' WHEN 'nps' THEN 'nps打分' END) AS `type`,
+            ua.remark AS remark,
+            ua.date_created AS dateCreated
+            FROM
+            account AS a
+            INNER JOIN USER AS u ON u.account_id = a.id
+            INNER JOIN user_advice AS ua ON ua.user_id = u.id
+            LEFT JOIN team AS t ON t.id = u.team_id
+            LEFT JOIN team_status AS ts ON ts.team_id = t.id
+<!--        WHERE-->
+<!--            1 = 1-->
+<!--            &lt;!&ndash; 日期区间筛选 &ndash;&gt;-->
+<!--            <if test="startDate != null and endDate != null">-->
+<!--                AND ua.date_created >= #{startDate}-->
+<!--                AND #{endDate} >= ua.date_created-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 按照系统筛选 &ndash;&gt;-->
+<!--            <if test="client != null and client != ''">-->
+<!--                AND ua.client = #{client}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 按照评分筛选 &ndash;&gt;-->
+<!--            <if test="star != null and star != ''">-->
+<!--                AND ua.star = #{star}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 按照手机号搜索 &ndash;&gt;-->
+<!--            <if test="phoneNumber != null and phoneNumber != ''">-->
+<!--                AND a.phone_number = #{phoneNumber}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 按照邮箱号搜索 &ndash;&gt;-->
+<!--            <if test="email != null and email != ''">-->
+<!--                AND a.email = #{email}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 评分类型 &ndash;&gt;-->
+<!--            <if test="type != null and type != ''">-->
+<!--                AND ua.type = #{type}-->
+<!--            </if>-->
+
+            ORDER BY
+            ua.date_created DESC
+    </select>
 
     <!-- 统计数量 -->
     <select id="rsqUserAdviceCount" resultType="java.lang.Integer">
