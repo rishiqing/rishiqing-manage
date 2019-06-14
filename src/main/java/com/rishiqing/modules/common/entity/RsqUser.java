@@ -37,6 +37,8 @@ public class RsqUser {
 
     private String username;
 
+    private Long accountId;
+
     public String getUsername() {
         return username;
     }
@@ -123,5 +125,13 @@ public class RsqUser {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 }

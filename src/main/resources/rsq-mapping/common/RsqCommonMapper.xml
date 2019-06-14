@@ -25,6 +25,8 @@
         <id column="name" property="name" jdbcType="VARCHAR" />
         <!-- username -->
         <id column="username" property="username" jdbcType="VARCHAR" />
+        <!-- accountId -->
+        <id column="account_id" property="accountId" jdbcType="BIGINT" />
     </resultMap>
 
     <!-- team版本信息map -->
@@ -60,7 +62,7 @@
         u.position,
         u.team_id,
         u.username,
-        u.name,
+        a.name,
         u.account_id,
         u.is_display
         FROM
@@ -96,7 +98,7 @@
         a.avatar,
         a.`name`,
         u.username,
-        a.id AS accountId
+        u.account_id
         FROM
         account a,
         USER u
@@ -107,14 +109,71 @@
         AND u.id = #{id}
     </select>
 
+    <select id="listUserInfoInRishiqingDB" resultMap="rsqUserMap">
+        SELECT
+        u.id,
+        u.team_id,
+        t.name as team_name,
+        a.email,
+        a.phone_number,
+        a.name,
+        u.username,
+        u.account_id
+        FROM
+        `user` AS u
+        INNER JOIN account AS a ON a.id = u.account_id
+        INNER JOIN team AS t ON u.team_id = t.id
+        WHERE
+        u.is_display = 1
+        AND t.id = #{params.teamId};
+    </select>
+
+    <select id="getUserInfoInRishiqingDBByUsername" resultMap="rsqUserMap">
+        SELECT
+        u.id,
+        u.team_id,
+        t.name as team_name,
+        a.email,
+        a.phone_number,
+        a.name,
+        u.username,
+        u.account_id
+        FROM
+        `user` AS u
+        INNER JOIN account AS a ON a.id = u.account_id
+        INNER JOIN team AS t ON u.team_id = t.id
+        WHERE
+        u.is_display = 1
+        AND u.username = #{params.username}
+        AND u.team_id = #{params.teamId}
+    </select>
+
     <!-- 获取版本信息 -->
     <select id="getTeamVersion" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
       SELECT id, type from team_version WHERE type = #{versionName}
     </select>
 
+    <select id="getTeamVersionByType" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
+        SELECT id, type from team_version WHERE type = #{type}
+    </select>
+
+    <select id="getTeamVersionById" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion">
+       SELECT id, type from team_version WHERE id = #{id}
+    </select>
+
+    <!-- 获取所有 teamVersion 组成列表 -->
+    <select id="listTeamVersion" resultType="com.rishiqing.modules.common.entity.RsqTeamVersion" >
+        SELECT id, type FROM team_version
+    </select>
+
     <!-- 获取产品信息 -->
     <select id="getRsqPayProductByTeamVersionId" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
-        SELECT * from pay_product WHERE team_version_id = #{teamVersionId}
+        SELECT id,price,description,can_buy,team_version_id from pay_product WHERE team_version_id = #{teamVersionId}
+    </select>
+
+    <!-- 获取所有产品列表 -->
+    <select id="listRsqPayProduct" resultType="com.rishiqing.modules.common.entity.RsqPayProduct">
+        SELECT id,price,description,can_buy,team_version_id FROM pay_product
     </select>
 
     <update id="updateRsqPassword" parameterType="com.rishiqing.modules.common.entity.RsqUser" >

@@ -1,5 +1,8 @@
 package cn.jeeweb.core.common.controller;
 
+import cn.jeeweb.modules.sys.entity.User;
+import com.rishiqing.modules.common.entity.RsqUser;
+import com.rishiqing.modules.common.service.IRsqCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -190,7 +193,7 @@ public abstract class BaseCRUDController<Entity extends AbstractEntity<ID>, ID e
 	 * @param request
 	 * @param response
 	 */
-	public void preSave(Entity entity, HttpServletRequest request, HttpServletResponse response) {
+	public void preSave(Entity entity, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)

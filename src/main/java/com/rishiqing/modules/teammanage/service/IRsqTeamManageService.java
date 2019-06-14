@@ -6,6 +6,7 @@ import cn.jeeweb.core.query.data.Queryable;
 import com.rishiqing.modules.teammanage.entity.RsqTeamManage;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**   
@@ -28,6 +29,15 @@ public interface IRsqTeamManageService extends ICommonService<RsqTeamManage> {
     RsqTeamManage getRsqTeamManageById(String id);
 
     /**
+     * 通过日事清公司信息获取所有的公司状态列表
+     * @param rsqTeamManage 日事清公司信息
+     * @return list 日事清所有公司列表信息
+     * @author codingR
+     * @date 2019/5/6 10:34
+     */
+    List<Map<String,String>> listTeamStatus(RsqTeamManage rsqTeamManage);
+
+    /**
      * 获取团队的会员相关信息
      */
     Map<String, String> getTeamStaus(RsqTeamManage rsqTeamManage);
@@ -37,31 +47,31 @@ public interface IRsqTeamManageService extends ICommonService<RsqTeamManage> {
      * 开通试用
      * @param paramMap
      */
-    Map<String, String> rsqTry(Map<String, String> paramMap);
+    Map<String, String> rsqTry(Map<String, Object> paramMap);
 
     /**
      * 购买
      * @param paramMap
      */
-    Map<String, String> rsqBuy(Map<String, String> paramMap);
+    Map<String, String> rsqBuy(Map<String, Object> paramMap);
 
     /**
      * 续费
      * @param paramMap
      */
-    Map<String, String> rsqRenewal(Map<String, String> paramMap);
+    Map<String, String> rsqRenewal(Map<String, Object> paramMap);
 
     /**
      * 增加人数
      * @param paramMap
      */
-    Map<String, String> rsqAdd(Map<String, String> paramMap);
+    Map<String, String> rsqAdd(Map<String, Object> paramMap);
 
     /**
      * 版本升级
      * @param paramMap
      */
-    Map<String, String> rsqUpdate(Map<String, String> paramMap);
+    Map<String, String> rsqUpdate(Map<String, Object> paramMap);
 
     /**
      * 当前用户操作权限判断

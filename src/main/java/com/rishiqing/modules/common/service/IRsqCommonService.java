@@ -4,6 +4,7 @@ import com.rishiqing.modules.common.entity.RsqPayProduct;
 import com.rishiqing.modules.common.entity.RsqTeamVersion;
 import com.rishiqing.modules.common.entity.RsqUser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,27 +36,49 @@ public interface IRsqCommonService {
     RsqUser getUserInfoInRishiqingDBById(Integer userId);
 
     /**
+     * 获取当前用户对应的日事清用户列表
+     * @return
+     */
+    @Deprecated
+    List<RsqUser> listUserInfoInRishiqingDB ();
+
+    /**
+     * 通过用户名获取日事清用户信息
+     * @param username
+     * @return
+     */
+    RsqUser getUserInfoInRishiqingDBByUsername(String username);
+
+    /**
      * 获取专业版id
      * @return
      */
+    @Deprecated
     Integer getBaseProfessionalVerionId();
 
     /**
      * 获取企业版id
      * @return
      */
+    @Deprecated
     Integer getBaseEnterpriseVersionId();
 
     /**
      * 获取team版本信息
      * @return
      */
-    RsqTeamVersion getTeamVersion(String versionName);
+    RsqTeamVersion getTeamVersionById(Integer id);
+
+    RsqTeamVersion getTeamVersionByType(String type);
+
+    List<RsqTeamVersion> listTeamVersion();
 
     /**
      * 获取专业版产品信息
      */
     RsqPayProduct getRsqPayProductByTeamVersionId(Integer teamVersionId);
+
+    List<RsqPayProduct> listRsqPayProduct();
 
     /**
      * 更新指定用户的密码
