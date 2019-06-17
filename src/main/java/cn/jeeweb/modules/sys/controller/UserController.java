@@ -184,7 +184,7 @@ public class UserController extends BaseCRUDController<User, String> {
 		if (rsqUser == null){
 			throw new Exception("未找到新兵营账户");
 		}
-		User user = userService.findByRsqUsername(rsqUsername);
+		User user = userService.findByRsqUsernameAndIdNotEqual(rsqUsername,entity.getId());
 		if (user != null) {
 			throw new Exception("已经绑定的新兵营账户，请重新填写新兵营ID");
 		}

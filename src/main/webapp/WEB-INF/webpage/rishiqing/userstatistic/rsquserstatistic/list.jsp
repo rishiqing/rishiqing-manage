@@ -25,11 +25,11 @@
     <grid:column label="数据来源"  name="dateFrom" />
     <grid:column label="渠道"  name="dateChannel" />
 
-    <shiro:hasAnyRoles name="admin,manager,employee">
+    <shiro:hasAnyRoles name="admin,manager">
         <grid:column label="公司详情"  name="opt" formatter="button"/>
         <grid:button title="公司详情" groupname="opt" function="openCompany" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
     </shiro:hasAnyRoles>
-    <shiro:hasAnyRoles name="admin">
+    <shiro:hasAnyRoles name="admin,manager">
         <grid:column label="更多"  name="opt2" formatter="button"/>
         <grid:button title="更多" groupname="opt2" function="openUser"  outclass="btn-warning" url="${adminPath}/common/rsqcommon/openUser?id={id}" />
     </shiro:hasAnyRoles>
