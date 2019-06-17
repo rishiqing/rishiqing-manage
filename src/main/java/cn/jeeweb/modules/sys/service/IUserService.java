@@ -54,4 +54,9 @@ public interface IUserService extends ICommonService<User> {
 	 */
 	public User findByRsqUsername(String rsqUsername);
 
+	/**
+	 * 通过 rsqUsername 查找系统用户，但取除当前用户
+	 */
+	public User findByRsqUsernameAndIdNotEqual(String rsqUsername,String currentUserId);
+
 }

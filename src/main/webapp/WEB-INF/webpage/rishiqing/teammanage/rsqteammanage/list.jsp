@@ -22,7 +22,7 @@
     <grid:column label="联系电话"  name="linkedPhone" query="true"  queryMode="input"  condition="like"/>
     <grid:column label="创建时间"  name="createDate"  query="true"  queryMode="date"  condition="between" />
     <grid:column label="成员数"  name="teamMember"  query="true"/>
-    <shiro:hasAnyRoles name="admin,manager,employee">
+    <shiro:hasAnyRoles name="admin,manager">
         <grid:column label="公司详情"  name="opt2" formatter="button"  width="70"/>
         <grid:button title="公司详情" groupname="opt2" function="openCompany" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
     </shiro:hasAnyRoles>

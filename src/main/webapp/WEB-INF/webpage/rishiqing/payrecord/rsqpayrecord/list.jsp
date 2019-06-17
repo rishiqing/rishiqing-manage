@@ -13,7 +13,7 @@
     <grid:column label="userId" hidden="true"   name="userId"/>
     <grid:column label="teamId" hidden="true"   name="teamId"/>
     <grid:column label="公司详情"  name="opt" formatter="button" width="60" />
-    <shiro:hasAnyRoles name="admin,manager,employee">
+    <shiro:hasAnyRoles name="admin,manager">
         <grid:button groupname="opt" function="openCompany" title="公司详情" outclass="btn-warning" url="${adminPath}/common/rsqcommon/openCompany?id={id}" />
     </shiro:hasAnyRoles>
     <grid:column label="充值时间"  name="payDate"  query="true"  queryMode="date"  condition="between" />
