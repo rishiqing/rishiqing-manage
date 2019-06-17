@@ -56,7 +56,7 @@
 
       <tr>
         <td  class="width-15 active text-right">
-          <label><font color="red">*</font>新兵营用户 ID: </label>
+          <label><font color="red">*</font>关联用户 ID: </label>
         </td>
         <td colspan="3">
           <form:input path="rsqUsername" class="form-control " datatype="*" nullmsg="请键入 ID" validErrorMsg="ID 异常，请重新键入" htmlEscape="false" />
