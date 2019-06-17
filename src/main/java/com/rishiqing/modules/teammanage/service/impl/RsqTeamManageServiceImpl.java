@@ -464,27 +464,28 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         String productName = (String) paramMap.get("productName");
 
         // 获取公司版本信息
-        RsqTeamVersion rsqTeamVersion = rsqCommonService.getTeamVersionByType(productName);
-        //获取teamStatus
-        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
-                Long.parseLong(String.valueOf(teamId)),
-                Long.parseLong(String.valueOf(rsqTeamVersion.getId()))
-        );
+        RsqTeamVersion updateVersion = rsqCommonService.getTeamVersionByType(productName);
 
-        // 如果公司状态存在
-        if(rsqTeamStatus != null){
-            // 如果过期
-            if(rsqTeamStatus.getExpired()){
-                //直接升级更新teamStatus
-                updateTeamStatus(rsqTeamStatus, paramMap);
-            }else{
-                // 未过期，则显示此用户还是会员，没法升级
-                resMap.put("fail", "版本升级失败！当前用户存在未过期的基本企业版版本，无法升级！");
-                return resMap;
-            }
-        }else{
+        // 基本专业版
+        RsqTeamVersion proVersion = rsqCommonService.getTeamVersionByType(RsqSystemConstants.TEAM_VERSION_BASE_PROFESSIONAL);
+        // 基本企业版
+        RsqTeamVersion trProVersion = rsqCommonService.getTeamVersionByType(RsqSystemConstants.TEAM_VERSION_TRIAL_PROFESSIONAL);
+
+        // 获取 teamStatus
+        RsqTeamStatus rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                Long.parseLong(String.valueOf(teamId)),Long.parseLong(String.valueOf(proVersion.getId()))
+        );
+        if (rsqTeamStatus == null) {
+            rsqTeamStatus = this.baseMapper.getRsqTeamStatusByTeamIdAndTeamVersionId(
+                    Long.parseLong(String.valueOf(teamId)),Long.parseLong(String.valueOf(trProVersion.getId()))
+            );
+        }
+        if (rsqTeamStatus != null) {
+            paramMap.put("teamVersionId", updateVersion.getId());
+            updateTeamStatus(rsqTeamStatus, paramMap);
+        } else {
             //teamStatus不存在，返回提示，要求先给用户开通会员
-            resMap.put("fail", "版本升级失败！当前用户不是基本专业版会员，请先开通基本专业版会员，再执行升级！");
+            resMap.put("fail", "版本升级失败！当前用户不是专业版，无法升级！");
             return resMap;
         }
         //添加充值记录
@@ -731,6 +732,10 @@ public class RsqTeamManageServiceImpl  extends CommonServiceImpl<RsqTeamManageMa
         rsqTeamStatus.setExpired(false);
         //4、更新日期
         rsqTeamStatus.setLastUpdated(new Date());
+        //5、更新版本
+        if (paramMap.get("teamVersionId") != null) {
+            rsqTeamStatus.setTeamVersionId((Integer) paramMap.get("teamVersionId"));
+        }
         //更新teamStatus
         this.baseMapper.updateTeamStatus(rsqTeamStatus);
     }
